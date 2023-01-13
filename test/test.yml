@@ -1,0 +1,14 @@
+- name: Idoit Test
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Search for Server with name
+      scaleuptechnologies.idoit.idoit_search:
+        idoit: "{{ idoit_access }}"
+        search: "ceph004.occ1.ham1.int.yco.de"
+  vars:
+    idoit_access:
+      api_key: "{{ lookup('ansible.builtin.env', 'IDOIT_KEY') }}"
+      user: "{{ lookup('ansible.builtin.env', 'IDOIT_USER') }}"
+      password: "{{ lookup('ansible.builtin.env', 'IDOIT_PASS') }}"
+      jrpc_url: "{{ lookup('ansible.builtin.env', 'IDOIT_JURL') }}"
