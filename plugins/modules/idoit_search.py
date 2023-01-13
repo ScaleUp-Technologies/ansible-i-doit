@@ -8,18 +8,19 @@ DOCUMENTATION = r'''
 ---
 module: idoit_search
 short_description: Fulltext search in i-doit.
-description: Fulltext search in i-doit.
+description: |
+  Fulltext search in i-doit.
+  see https://kb.i-doit.com/display/en/Search
+  or https://kb.i-doit.com/display/de/API+Methoden idoit.search
 options:
-    idoit:
-        description: Idoit Json rpc url and credentials
-        tpye: dict
-        required: true
     search:
         description: String to seach for
         tpye: str
         required: true
 author:
     - Sven Anders (@tabacha)
+extends_documentation_fragment:
+    - scaleuptechnologies.idoit.idoit_option
 '''
 EXAMPLES = r'''
 - name: Search for Server with name
@@ -56,10 +57,8 @@ result:
 from ansible.module_utils.basic import AnsibleModule
 import ansible_collections.scaleuptechnologies.idoit.plugins.module_utils.utils as idoit_utils
 import ansible_collections.scaleuptechnologies.idoit.plugins.module_utils.idoit_api as idoit_api
-#  see https://kb.i-doit.com/display/en/Search
-#  or https://kb.i-doit.com/display/de/API+Methoden idoit.search
 
-def main():
+def run_module():
     arg_spec=dict(
             idoit=idoit_utils.idoit_argument_spec,
             search=dict(type="str", required=True),
@@ -72,6 +71,9 @@ def main():
     result=idoit_search.search(module.params['search'])
     result['changed']=False
     module.exit_json(**result)
+
+def main():
+    run_module()
 
 if __name__ == '__main__':
     main()
