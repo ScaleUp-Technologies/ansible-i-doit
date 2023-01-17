@@ -23,6 +23,20 @@ def createApiCalls(cfg):
                 rtn[varname]=IDoitCategory(cfg, varname)
     return rtn
 
+def createApiCall(cfg, category):
+    if category == consts.C__CATG__CONNECTOR:
+        return IDoitConnector(cfg)
+    if category == consts.C__CATG__CUSTOM_FIELDS_RACKTABLES:
+        return Racktables(cfg)
+    if category == consts.C__CATG__LOCATION:
+        return IDoitLocation(cfg)
+    if category == consts.C__CATG__NETWORK_PORT:
+        return IDoitNetworkPort(cfg)
+    if category.startswith('C__OBJTYPE__'):
+        return IDoitObject(cfg, category)
+    if category.startswith('C__CATS__') or category.startswith('C__CATG__'):
+        return IDoitCategory(cfg, category)
+    return None
 
 def createApiDialogs(cfg,category, field):
     if  not 'dialogs' in cfg.keys():
