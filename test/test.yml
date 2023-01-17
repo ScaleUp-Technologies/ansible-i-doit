@@ -6,6 +6,10 @@
       scaleuptechnologies.idoit.idoit_search:
         idoit: "{{ idoit_access }}"
         search: "ceph004.occ1.ham1.int.yco.de"
+    - name: Get Model for Object 1320
+      scaleuptechnologies.idoit.idoit_cat_model_info:
+        idoit: "{{ idoit_access }}"
+        obj_id: 1320
     - name: Set a Model for a machine with serial
       scaleuptechnologies.idoit.idoit_cat_model:
         idoit: "{{ idoit_access }}"

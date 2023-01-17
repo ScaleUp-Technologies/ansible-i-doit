@@ -136,3 +136,28 @@ class IdoitCategoryModule(AnsibleModule):
             }
 
         self.exit_json(**result)
+
+class IdoitCategoryInfoModule(AnsibleModule):
+    def __init__(self, *args, idoit_spec):
+        self.idoit_spec=idoit_spec
+        arg_spec=dict(
+             idoit=idoit_utils.idoit_argument_spec,
+             obj_id=dict(type="int", required=True),
+        )
+        super().__init__(*args, argument_spec=arg_spec, supports_check_mode=True)
+    def run(self):
+        self.cfg=json.loads(json.dumps(self.params['idoit']))
+        self.idoit_cat_api=idoit_api.createApiCall(self.cfg,self.idoit_spec['category'])
+        old_idoit_data= self.idoit_cat_api.read_category(self.params['obj_id'])
+        old_data={}
+        for idoit_name in self.idoit_spec['fields'].keys():
+            field=self.idoit_spec['fields'][idoit_name]
+            ansible_name=idoit_name
+            if 'ansible_name' in field.keys():
+                ansible_name=field['ansible_name']
+            if field['type']=='str':
+                old_data[ansible_name]=old_idoit_data[idoit_name]
+            if field['type']=='dialog':
+                ansible_id_name='%s_id' % (ansible_name)
+                old_data[ansible_id_name]=old_idoit_data[idoit_name]
+        self.exit_json(**old_data)
