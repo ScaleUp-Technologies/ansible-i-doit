@@ -6,6 +6,22 @@
       scaleuptechnologies.idoit.idoit_search:
         idoit: "{{ idoit_access }}"
         search: "ceph004.occ1.ham1.int.yco.de"
+    - name: Set a Model for a machine with serial
+      scaleuptechnologies.idoit.idoit_cat_model:
+        idoit: "{{ idoit_access }}"
+        obj_id: 1320
+        manufacturer: 'HP'
+        model: 'ProLiant DL160G6'
+        service_tag: CZJ037040C
+        serial: 'Test 42'
+    - name: Set a Model for a machine without serial
+      scaleuptechnologies.idoit.idoit_cat_model:
+        idoit: "{{ idoit_access }}"
+        obj_id: 1320
+        manufacturer: 'HP'
+        model: 'ProLiant DL160G6'
+        service_tag: CZJ037040C
+
   vars:
     idoit_access:
       api_key: "{{ lookup('ansible.builtin.env', 'IDOIT_KEY') }}"

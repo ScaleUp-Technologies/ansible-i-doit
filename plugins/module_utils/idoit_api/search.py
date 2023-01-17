@@ -9,5 +9,5 @@ class IDoitSearch(IDoitApiBase):
             'q': search,
         }
         rtn=self.xml_rpc_call('idoit.search', params)
-        return {'result':rtn['result']}
+        return rtn['result']
 

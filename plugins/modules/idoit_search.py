@@ -17,6 +17,12 @@ options:
         description: String to seach for
         tpye: str
         required: true
+    only_exact_match:
+        description: Filter all results which are not exact the searchsting.
+        type: bool
+    only_key:
+        description: Filter all results which are not exact this key.
+        type: str
 author:
     - Sven Anders (@tabacha)
 extends_documentation_fragment:
@@ -43,16 +49,6 @@ result:
         type: cmdb
         value: ceph004.occ1.ham1.int.yco.de
 '''
-RETURN2 = r'''
-result:
-  - documentId: 3024
-    key: "Server > General > Title"
-    link: "/?objID=3024&catgID=1&cateID=3024&highlight=ceph004.occ1.ham1.int.yco.de"
-    score: 100
-    status: Normal
-    type: cmdb
-    value: ceph004.occ1.ham1.int.yco.de
-'''
 
 from ansible.module_utils.basic import AnsibleModule
 import ansible_collections.scaleuptechnologies.idoit.plugins.module_utils.utils as idoit_utils
@@ -62,14 +58,28 @@ def run_module():
     arg_spec=dict(
             idoit=idoit_utils.idoit_argument_spec,
             search=dict(type="str", required=True),
+            only_exact_match=dict(type="bool", default=False),
+            only_key=dict(type="str",default=None)
     )
     module = AnsibleModule(
         argument_spec=arg_spec,
         supports_check_mode=True,
     )
     idoit_search=idoit_api.search(module.params['idoit'])
-    result=idoit_search.search(module.params['search'])
-    result['changed']=False
+    search_result=idoit_search.search(module.params['search'])
+    result={
+        'changed': False,
+        'result': [],
+        'only_key': ( module.params['only_key'] )
+    }
+    for ele in search_result:
+        add=False
+        if (module.params['only_exact_match'] == False) or (ele['value'] == module.params['search']):
+            add=True
+        if (module.params['only_key'] is not None) and ele['key'] != module.params['only_key']:
+            add=False
+        if add:
+            result['result'].append(ele)
     module.exit_json(**result)
 
 def main():

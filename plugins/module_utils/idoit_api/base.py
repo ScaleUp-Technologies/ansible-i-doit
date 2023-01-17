@@ -6,7 +6,10 @@ class IDoitApiBase:
     def __init__(self, cfg, obj_type:str):
         self.cfg=cfg
         self.obj_type = obj_type
+        self.debug = False
 
+    def set_debug_mode(self, debug=True):
+        self.debug = debug
 
     def xml_rpc_call(self, method, params, debug=False):
         headers = {'content-type': 'application/json'}
@@ -24,7 +27,7 @@ class IDoitApiBase:
             auth=basic_auth,
             headers=headers
         ).json()
-        if debug or 'error' in response.keys():
+        if self.debug or debug or 'error' in response.keys():
             print('Url')
             print(self.cfg['jrpc_url'])
             print('Payload')

@@ -29,9 +29,10 @@ class IDoitCategory(IDoitApiBase):
             "object": objId,
             'category': self.obj_type,
             'data': sdata        }
-        print('--Category Save---')
-        pprint(params)
-        print('--Category Save---')
+        if self.debug:
+            print('--Category Save---')
+            pprint(params)
+            print('--Category Save---')
         return self.xml_rpc_call('cmdb.category.save', params)
 
     def update_category(self, objId, data):
@@ -45,9 +46,10 @@ class IDoitCategory(IDoitApiBase):
             "objID": objId,
             'category': self.obj_type,
             'data': sdata        }
-        print('--Category Update---')
-        pprint(params)
-        print('--Category Update---')
+        if self.debug:
+            print('--Category Update---')
+            pprint(params)
+            print('--Category Update---')
         return self.xml_rpc_call('cmdb.category.update', params)
 
     def read_categories(self, objId):
