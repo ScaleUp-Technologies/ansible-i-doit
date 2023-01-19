@@ -15,7 +15,7 @@ description: |
 options:
     search:
         description: String to seach for
-        tpye: str
+        type: str
         required: true
     only_exact_match:
         description: Filter all results which are not exact the searchsting.

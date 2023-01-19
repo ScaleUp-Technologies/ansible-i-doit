@@ -13,10 +13,13 @@ class IDoitCategory(IDoitApiBase):
         r=self.xml_rpc_call('cmdb.category_info', params)
         self.fields={}
         for fieldname in r['result'].keys():
+            default=None
+            if 'default' in r['result'][fieldname]['ui']:
+                default=r['result'][fieldname]['ui']['default'] or None
             self.fields[fieldname]={
                 'data_type': r['result'][fieldname]['data']['type'],
                 'ui_type': r['result'][fieldname]['ui']['type'],
-                'default': r['result'][fieldname]['ui']['default'],
+                'default': default,
                 'title': r['result'][fieldname]['info']['title']
             }
 
@@ -42,6 +45,8 @@ class IDoitCategory(IDoitApiBase):
         if "id" in sdata.keys():
             sdata['category_id']=sdata['id']
             del(sdata["id"])
+        if sdata['category_id'] is None:
+            raise Exception('category_id is None')
         params= {
             "objID": objId,
             'category': self.obj_type,

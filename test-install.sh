@@ -1,4 +1,7 @@
 #!/bin/bash
+
+set -e # exit on first error
+
 MYTMP=$(mktemp -d)
 python3 build.py
 ansible-galaxy collection build --output-path ${MYTMP}

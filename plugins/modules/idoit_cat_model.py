@@ -9,8 +9,7 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
 author:
-- Scaleup Technologies
-- Sven Anders (@tabacha)
+- Sven Anders (during work by ScaleUp Technologies) (@tabacha)
 description: Adds C__CATG__MODEL category to an object if not there or update values
 extends_documentation_fragment:
 - scaleuptechnologies.idoit.idoit_option

@@ -21,16 +21,25 @@ def render_cat(base_spec,template):
                 'description': field['description_id'],
                 'type': 'int'
             }
+        elif field['type'] == 'float':
+            idoit_doc_options[ansible_name]['type']='float'
+        elif field['type'] != 'str':
+            raise Exception('Unsupported type %s in %s.yml' % (field['type'],base_spec['basename']))
+
+
     idoit_doc= {
         'module': ('idoit_cat_%s' % base_spec['basename']),
         'short_description': ('Create or update a %s category to an object' % base_spec['basename']),
         'description':  ('Adds %s category to an object if not there or update values' % base_spec['category']),
         'options': idoit_doc_options,
-        'author': ['Scaleup Technologies', 'Sven Anders (@tabacha)'],
+        'author': ['Sven Anders (during work by ScaleUp Technologies) (@tabacha)'],
         'extends_documentation_fragment': [
             'scaleuptechnologies.idoit.idoit_option',
             'scaleuptechnologies.idoit.category_options']
     }
+    if not base_spec['single_value_cat']:
+        idoit_doc['extends_documentation_fragment'].append('scaleuptechnologies.idoit.multi_category_options')
+
     idoit_examples=base_spec['doc_examples']
     idoit_return={
         'changed': {

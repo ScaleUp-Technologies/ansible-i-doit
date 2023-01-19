@@ -8,6 +8,7 @@ from .connector import IDoitConnector
 from .networkport import IDoitNetworkPort
 from .dialog import IDoitDialog
 from .search import IDoitSearch
+from .memory import IDoitMemory
 
 def createApiCalls(cfg):
     rtn={}
@@ -15,6 +16,7 @@ def createApiCalls(cfg):
     rtn[consts.C__CATG__CUSTOM_FIELDS_RACKTABLES]=Racktables(cfg)
     rtn[consts.C__CATG__LOCATION]=IDoitLocation(cfg)
     rtn[consts.C__CATG__NETWORK_PORT]=IDoitNetworkPort(cfg)
+    rtn[consts.C__CATG__MEMORY]=IDoitMemory(cfg)
     for varname in consts.__dict__.keys():
         if not (varname in rtn.keys()):
             if varname.startswith('C__OBJTYPE__'):
@@ -30,6 +32,8 @@ def createApiCall(cfg, category):
         return Racktables(cfg)
     if category == consts.C__CATG__LOCATION:
         return IDoitLocation(cfg)
+    if category == consts.C__CATG__MEMORY:
+        return IDoitMemory(cfg)
     if category == consts.C__CATG__NETWORK_PORT:
         return IDoitNetworkPort(cfg)
     if category.startswith('C__OBJTYPE__'):

@@ -25,7 +25,38 @@
         manufacturer: 'HP'
         model: 'ProLiant DL160G6'
         service_tag: CZJ037040C
-
+    - name: Get Memory Info for server ceph-mon01.os1
+      scaleuptechnologies.idoit.idoit_cat_memory_info:
+        idoit: "{{ idoit_access }}"
+        obj_id: 4005
+      register: mem_info
+      tags:
+        - mem
+    - name: Set Memory for server ceph-mon01.os1 by id
+      scaleuptechnologies.idoit.idoit_cat_memory:
+        idoit: "{{ idoit_access }}"
+        obj_id: 4005
+        id: "{{ mem_info.data[0]['id'] }}"
+        manufacturer: 'Samsung'
+        title: 'SDRAM'
+        capacity: 8388608
+        unit: KB
+        description: '<p>DIMM.Socket.A1 M393B1G70BH0-YK0 131A13D9</p>'
+      tags:
+        - mem
+    - name: Set Memory for server ceph-mon01.os1 by fields
+      scaleuptechnologies.idoit.idoit_cat_memory:
+        idoit: "{{ idoit_access }}"
+        obj_id: 4005
+        search_by_fields:
+          - description
+        manufacturer: 'Samsung'
+        title: 'SDRAM'
+        capacity: 8388608
+        unit: KB
+        description: '<p>DIMM.Socket.A2 M393B1G70BH0-YK0 191B13X9</p>'
+      tags:
+        - mem
   vars:
     idoit_access:
       api_key: "{{ lookup('ansible.builtin.env', 'IDOIT_KEY') }}"
