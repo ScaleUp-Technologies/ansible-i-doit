@@ -118,10 +118,10 @@ def render_cat_info(base_spec,template):
 
 def write_py_file(filename,template,idoit_doc,idoit_examples,idoit_return,idoit_spec,idoit_class):
     content=template.render(
-        idoit_doc=yaml.dump(idoit_doc),
-        idoit_examples=yaml.dump(idoit_examples),
-        idoit_return=yaml.dump(idoit_return),
-        idoit_spec=yaml.dump(idoit_spec),
+        idoit_doc=yaml.dump(idoit_doc, width=70),
+        idoit_examples=yaml.dump(idoit_examples, width=70),
+        idoit_return=yaml.dump(idoit_return, width=70),
+        idoit_spec=yaml.dump(idoit_spec, width=70),
         idoit_class=idoit_class)
     with open(filename,'w') as outfile:
         outfile.write(content)

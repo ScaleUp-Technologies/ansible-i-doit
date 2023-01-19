@@ -10,7 +10,8 @@ __metaclass__ = type
 DOCUMENTATION = r'''
 author:
 - Sven Anders (during work by ScaleUp Technologies) (@tabacha)
-description: Adds C__CATG__MODEL category to an object if not there or update values
+description: Adds C__CATG__MODEL category to an object if not there or update
+  values
 extends_documentation_fragment:
 - scaleuptechnologies.idoit.idoit_option
 - scaleuptechnologies.idoit.category_options
@@ -23,7 +24,8 @@ options:
     description: Firmware
     type: str
   manufacturer:
-    description: Name of Manufactuerer of the device, if not there it will be created
+    description: Name of Manufactuerer of the device, if not there it will
+      be created
     type: str
   manufacturer_id:
     description: Id of Manufactuerer of the device
@@ -46,6 +48,7 @@ options:
 short_description: Create or update a model category to an object
 
 '''
+
 EXAMPLES = r'''
 - name: Set a Model for a machine with serial
   scaleuptechnologies.idoit.idoit_cat_model:
@@ -79,6 +82,7 @@ return:
   type: complex
 
 '''
+
 IDOIT_SPEC = r'''
 category: C__CATG__MODEL
 fields:
@@ -89,7 +93,8 @@ fields:
     description: Firmware
     type: str
   manufacturer:
-    description: Name of Manufactuerer of the device, if not there it will be created
+    description: Name of Manufactuerer of the device, if not there it will
+      be created
     description_id: Id of Manufactuerer of the device
     type: dialog
   productid:
@@ -111,6 +116,7 @@ fields:
 single_value_cat: true
 
 '''
+
 from ansible_collections.scaleuptechnologies.idoit.plugins.module_utils.idoit import IdoitCategoryModule
 import ansible_collections.scaleuptechnologies.idoit.plugins.module_utils.idoit_api.consts as consts
 import yaml
@@ -122,8 +128,10 @@ def run_module():
     )
     module.run()
 
+
 def main():
     run_module()
+
 
 if __name__ == '__main__':
     main()

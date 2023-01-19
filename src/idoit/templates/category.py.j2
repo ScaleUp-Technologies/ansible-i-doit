@@ -10,6 +10,7 @@ __metaclass__ = type
 DOCUMENTATION = r'''
 {{ idoit_doc }}
 '''
+
 EXAMPLES = r'''
 {{ idoit_examples }}
 '''
@@ -17,9 +18,11 @@ EXAMPLES = r'''
 RETURN = r'''
 {{ idoit_return }}
 '''
+
 IDOIT_SPEC = r'''
 {{ idoit_spec }}
 '''
+
 from ansible_collections.scaleuptechnologies.idoit.plugins.module_utils.idoit import {{ idoit_class }}
 import ansible_collections.scaleuptechnologies.idoit.plugins.module_utils.idoit_api.consts as consts
 import yaml
@@ -31,8 +34,11 @@ def run_module():
     )
     module.run()
 
+
 def main():
     run_module()
 
+
 if __name__ == '__main__':
     main()
+
