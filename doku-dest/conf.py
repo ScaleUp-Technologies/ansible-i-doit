@@ -12,7 +12,8 @@ copyright = 'Ansible contributors'
 title = 'Ansible Collections Documentation'
 html_short_title = 'Ansible Collections Documentation'
 
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.intersphinx', 'sphinx_antsibull_ext']
+extensions = ['sphinx.ext.autodoc',
+              'sphinx.ext.intersphinx', 'sphinx_antsibull_ext']
 
 pygments_style = 'ansible'
 
@@ -41,4 +42,3 @@ intersphinx_mapping = {
 default_role = 'any'
 
 nitpicky = True
-

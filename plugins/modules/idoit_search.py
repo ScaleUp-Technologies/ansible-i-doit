@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, division, print_function)
+import ansible_collections.scaleuptechnologies.idoit.plugins.module_utils.idoit_api as idoit_api
+import ansible_collections.scaleuptechnologies.idoit.plugins.module_utils.utils as idoit_utils
+from ansible.module_utils.basic import AnsibleModule
 __metaclass__ = type
 
 
@@ -50,41 +53,39 @@ result:
         value: ceph004.occ1.ham1.int.yco.de
 '''
 
-from ansible.module_utils.basic import AnsibleModule
-import ansible_collections.scaleuptechnologies.idoit.plugins.module_utils.utils as idoit_utils
-import ansible_collections.scaleuptechnologies.idoit.plugins.module_utils.idoit_api as idoit_api
 
 def run_module():
-    arg_spec=dict(
-            idoit=idoit_utils.idoit_argument_spec,
-            search=dict(type="str", required=True),
-            only_exact_match=dict(type="bool", default=False),
-            only_key=dict(type="str",default=None)
+    arg_spec = dict(
+        idoit=idoit_utils.idoit_argument_spec,
+        search=dict(type="str", required=True),
+        only_exact_match=dict(type="bool", default=False),
+        only_key=dict(type="str", default=None)
     )
     module = AnsibleModule(
         argument_spec=arg_spec,
         supports_check_mode=True,
     )
-    idoit_search=idoit_api.search(module.params['idoit'])
-    search_result=idoit_search.search(module.params['search'])
-    result={
+    idoit_search = idoit_api.search(module.params['idoit'])
+    search_result = idoit_search.search(module.params['search'])
+    result = {
         'changed': False,
         'result': [],
-        'only_key': ( module.params['only_key'] )
+        'only_key': (module.params['only_key'])
     }
     for ele in search_result:
-        add=False
+        add = False
         if (module.params['only_exact_match'] == False) or (ele['value'] == module.params['search']):
-            add=True
+            add = True
         if (module.params['only_key'] is not None) and ele['key'] != module.params['only_key']:
-            add=False
+            add = False
         if add:
             result['result'].append(ele)
     module.exit_json(**result)
 
+
 def main():
     run_module()
 
+
 if __name__ == '__main__':
     main()
-

@@ -10,20 +10,22 @@ from .dialog import IDoitDialog
 from .search import IDoitSearch
 from .memory import IDoitMemory
 
+
 def createApiCalls(cfg):
-    rtn={}
-    rtn[consts.C__CATG__CONNECTOR]=IDoitConnector(cfg)
-    rtn[consts.C__CATG__CUSTOM_FIELDS_RACKTABLES]=Racktables(cfg)
-    rtn[consts.C__CATG__LOCATION]=IDoitLocation(cfg)
-    rtn[consts.C__CATG__NETWORK_PORT]=IDoitNetworkPort(cfg)
-    rtn[consts.C__CATG__MEMORY]=IDoitMemory(cfg)
+    rtn = {}
+    rtn[consts.C__CATG__CONNECTOR] = IDoitConnector(cfg)
+    rtn[consts.C__CATG__CUSTOM_FIELDS_RACKTABLES] = Racktables(cfg)
+    rtn[consts.C__CATG__LOCATION] = IDoitLocation(cfg)
+    rtn[consts.C__CATG__NETWORK_PORT] = IDoitNetworkPort(cfg)
+    rtn[consts.C__CATG__MEMORY] = IDoitMemory(cfg)
     for varname in consts.__dict__.keys():
         if not (varname in rtn.keys()):
             if varname.startswith('C__OBJTYPE__'):
-                rtn[varname]=IDoitObject(cfg, varname)
+                rtn[varname] = IDoitObject(cfg, varname)
             if varname.startswith('C__CATS__') or varname.startswith('C__CATG__'):
-                rtn[varname]=IDoitCategory(cfg, varname)
+                rtn[varname] = IDoitCategory(cfg, varname)
     return rtn
+
 
 def createApiCall(cfg, category):
     if category == consts.C__CATG__CONNECTOR:
@@ -42,14 +44,16 @@ def createApiCall(cfg, category):
         return IDoitCategory(cfg, category)
     return None
 
-def createApiDialogs(cfg,category, field):
-    if  not 'dialogs' in cfg.keys():
-        cfg['dialogs']={}
+
+def createApiDialogs(cfg, category, field):
+    if not 'dialogs' in cfg.keys():
+        cfg['dialogs'] = {}
     if not category in cfg['dialogs'].keys():
-        cfg['dialogs'][category]={}
+        cfg['dialogs'][category] = {}
     if not field in cfg['dialogs'][category].keys():
-        cfg['dialogs'][category][field]=IDoitDialog(cfg, category, field)
+        cfg['dialogs'][category][field] = IDoitDialog(cfg, category, field)
     return cfg['dialogs'][category][field]
 
+
 def search(cfg):
-    return IDoitSearch(cfg,'no_type')
+    return IDoitSearch(cfg, 'no_type')
