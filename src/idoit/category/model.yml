@@ -1,0 +1,39 @@
+category: C__CATG__MODEL
+basename: model
+single_value_cat: True
+fields:
+  productid:
+    ansible_name: product_id
+    description: Product-ID
+    type: str
+  service_tag:
+    type: str
+    description: Service Tag
+  serial:
+    type: str
+    description: Serial
+  firmware:
+    type: str
+    description: Firmware
+  description:
+    type: str
+    description: Description of the Model
+  manufacturer:
+    type: dialog
+    description: Name of Manufactuerer of the device, if not there it will be created
+    description_id: Id of Manufactuerer of the device
+  title:
+    type: dialog
+    ansible_name: model
+    dialog_parent: manufacturer
+    description: Model of the device, if not there it will be created
+    description_id: Id of Model of the device
+doc_examples:
+  - name: Set a Model for a machine with serial
+    scaleuptechnologies.idoit.idoit_cat_model:
+      idoit: "{{ idoit_access }}"
+      obj_id: 1320
+      manufacturer: 'HP'
+      model: 'ProLiant DL160G6'
+      service_tag: CZJ037040C
+      serial: '42'
