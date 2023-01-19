@@ -1,0 +1,32 @@
+category: C__CATG__MEMORY
+basename: memory
+single_value_cat: False
+fields:
+  title:
+    description: Something like MemoryStick, Flash, DDRAM, SDRAM, ..
+    type: dialog
+    description_id: Id of title
+  manufacturer:
+    type: dialog
+    description: Name of Manufactuerer of the device, if not there it will be created
+    description_id: Id of Manufactuerer of the device
+  capacity:
+    type: float
+    description: Type of the Memory DDR, DDR2, SDRAM ..
+  unit:
+    type: dialog
+    description: Unit of the capacity (B,KB,MB,GB,TB)
+    description_id: Id of Capacity Unit
+  description:
+    type: str
+    description: Description of the Memory Module
+doc_examples:
+  - name: Set a new Memory Module
+    scaleuptechnologies.idoit.idoit_cat_model:
+      idoit: "{{ idoit_access }}"
+      obj_id: 1320
+      manufacturer: 'Samsung'
+      title: 'SDRAM'
+      capacity: 8388608
+      unit: KB
+      description: 'DIMM.Socket.A1 M393B1G70BH0-YK0 131A13D9'
