@@ -63,19 +63,60 @@ def render_cat(base_spec,template):
         'fields': base_spec['fields'],
     }
 
-    idoit_class='IdoitCategoryModule'
+    out_filename='plugins/modules/idoit_cat_%s.py' % base_spec['basename']
+    write_py_file(out_filename,template,idoit_doc,idoit_examples,idoit_return,idoit_spec,'IdoitCategoryModule')
 
+def render_cat_info(base_spec,template):
+    idoit_doc_options={}
+    idoit_doc= {
+        'module': ('idoit_cat_%s_info' % base_spec['basename']),
+        'short_description': ('Get values from a %s category to an object' % base_spec['basename']),
+        'description':  ('Gets %s category  values' % base_spec['category']),
+        'options': idoit_doc_options,
+        'author': ['Scaleup Technologies', 'Sven Anders (@tabacha)'],
+        'extends_documentation_fragment': [
+            'scaleuptechnologies.idoit.idoit_option',
+            'scaleuptechnologies.idoit.category_options']
+    }
+    module_fqn='scaleuptechnologies.idoit.idoit_cat_%s_info' % base_spec['basename']
+    idoit_examples={
+        "name": "Search for a category for object 1320",
+        module_fqn: {
+            "idoit": "{{ idoit_access }}",
+            "obj_id": 1320
+        }
+    }
+    idoit_return={
+        'changed': {
+            'description': 'Are there changes?',
+            'type': 'bool',
+            'returned': 'always'
+        },
+        'data': {
+            'description': 'Data of the category',
+            'returned': 'always',
+            'type': 'complex',
+        }
+    }
+    idoit_spec={
+        'category': base_spec['category'],
+        'single_value_cat': base_spec['single_value_cat'],
+        'fields': base_spec['fields'],
+    }
+
+    out_filename='plugins/modules/idoit_cat_%s_info.py' % base_spec['basename']
+    write_py_file(out_filename,template,idoit_doc,idoit_examples,idoit_return,idoit_spec,'IdoitCategoryInfoModule')
+
+def write_py_file(filename,template,idoit_doc,idoit_examples,idoit_return,idoit_spec,idoit_class):
     content=template.render(
         idoit_doc=yaml.dump(idoit_doc),
         idoit_examples=yaml.dump(idoit_examples),
         idoit_return=yaml.dump(idoit_return),
         idoit_spec=yaml.dump(idoit_spec),
         idoit_class=idoit_class)
-    out_filename='plugins/modules/idoit_cat_%s.py' % base_spec['basename']
-    with open(out_filename,'w') as outfile:
+    with open(filename,'w') as outfile:
         outfile.write(content)
 
-def render_cat_info(base_spec,template):
 
 def processYaml(filename, template):
     print(filename)
@@ -84,6 +125,7 @@ def processYaml(filename, template):
         try:
             base_spec=yaml.safe_load(stream)
             render_cat(base_spec,template)
+            render_cat_info(base_spec, template)
         except yaml.YAMLError as exc:
             print(exc)
 
