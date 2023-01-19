@@ -22,7 +22,8 @@ def createApiCalls(cfg):
         if not (varname in rtn.keys()):
             if varname.startswith('C__OBJTYPE__'):
                 rtn[varname] = IDoitObject(cfg, varname)
-            if varname.startswith('C__CATS__') or varname.startswith('C__CATG__'):
+            if (varname.startswith('C__CATS__') or
+               varname.startswith('C__CATG__')):
                 rtn[varname] = IDoitCategory(cfg, varname)
     return rtn
 
@@ -46,11 +47,11 @@ def createApiCall(cfg, category):
 
 
 def createApiDialogs(cfg, category, field):
-    if not 'dialogs' in cfg.keys():
+    if 'dialogs' not in cfg.keys():
         cfg['dialogs'] = {}
-    if not category in cfg['dialogs'].keys():
+    if category not in cfg['dialogs'].keys():
         cfg['dialogs'][category] = {}
-    if not field in cfg['dialogs'][category].keys():
+    if field not in cfg['dialogs'][category].keys():
         cfg['dialogs'][category][field] = IDoitDialog(cfg, category, field)
     return cfg['dialogs'][category][field]
 

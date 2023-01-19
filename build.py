@@ -30,10 +30,16 @@ def render_cat(base_spec, template):
 
     idoit_doc = {
         'module': ('idoit_cat_%s' % base_spec['basename']),
-        'short_description': ('Create or update a %s category to an object' % base_spec['basename']),
-        'description':  ('Adds %s category to an object if not there or update values' % base_spec['category']),
+        'short_description': (
+          'Create or update a %s category to an object' %
+          base_spec['basename']),
+        'description':  (
+          'Adds %s category to an object if not there or update values' %
+          base_spec['category']),
         'options': idoit_doc_options,
-        'author': ['Sven Anders (during work by ScaleUp Technologies) (@tabacha)'],
+        'author': [
+            'Sven Anders (during work by ScaleUp Technologies) (@tabacha)'
+        ],
         'extends_documentation_fragment': [
             'scaleuptechnologies.idoit.idoit_option',
             'scaleuptechnologies.idoit.category_options']
@@ -75,15 +81,18 @@ def render_cat(base_spec, template):
     }
 
     out_filename = 'plugins/modules/idoit_cat_%s.py' % base_spec['basename']
-    write_py_file(out_filename, template, idoit_doc, idoit_examples,
-                  idoit_return, idoit_spec, 'IdoitCategoryModule')
+    write_py_file(out_filename, template, idoit_doc,
+                  idoit_examples, idoit_return, idoit_spec,
+                  'IdoitCategoryModule')
 
 
 def render_cat_info(base_spec, template):
     idoit_doc_options = {}
     idoit_doc = {
         'module': ('idoit_cat_%s_info' % base_spec['basename']),
-        'short_description': ('Get values from a %s category to an object' % base_spec['basename']),
+        'short_description': (
+            'Get values from a %s category to an object' %
+            base_spec['basename']),
         'description':  ('Gets %s category  values' % base_spec['category']),
         'options': idoit_doc_options,
         'author': ['Scaleup Technologies', 'Sven Anders (@tabacha)'],
@@ -122,7 +131,8 @@ def render_cat_info(base_spec, template):
                   idoit_return, idoit_spec, 'IdoitCategoryInfoModule')
 
 
-def write_py_file(filename, template, idoit_doc, idoit_examples, idoit_return, idoit_spec, idoit_class):
+def write_py_file(filename, template, idoit_doc, idoit_examples,
+                  idoit_return, idoit_spec, idoit_class):
     content = template.render(
         idoit_doc=yaml.dump(idoit_doc, width=70),
         idoit_examples=yaml.dump(idoit_examples, width=70),
