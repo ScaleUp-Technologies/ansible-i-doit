@@ -1,5 +1,4 @@
 import json
-from unicodedata import category
 import requests
 from pprint import pprint
 

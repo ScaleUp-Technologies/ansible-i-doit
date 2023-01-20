@@ -1,4 +1,3 @@
-from unicodedata import category
 from pprint import pprint
 from .base import IDoitApiBase
 

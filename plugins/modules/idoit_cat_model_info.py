@@ -76,7 +76,6 @@ single_value_cat: true
 '''
 
 from ansible_collections.scaleuptechnologies.idoit.plugins.module_utils.idoit import IdoitCategoryInfoModule
-import ansible_collections.scaleuptechnologies.idoit.plugins.module_utils.idoit_api.consts as consts
 import yaml
 
 

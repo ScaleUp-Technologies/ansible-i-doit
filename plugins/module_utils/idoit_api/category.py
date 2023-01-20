@@ -1,7 +1,5 @@
-from unicodedata import category
 from pprint import pprint
 from .base import IDoitApiBase
-from .consts import C__CATG__CONNECTOR
 from copy import deepcopy
 import json
 
