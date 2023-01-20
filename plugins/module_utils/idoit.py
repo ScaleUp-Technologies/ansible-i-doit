@@ -170,7 +170,7 @@ class IdoitCategoryModule(AnsibleModule):
                     new_data[ansible_id_name] = -42
                 else:
                     new_data[ansible_id_name] = my_dialog_api.create(
-                        self.params['ansible_name'], dialog_parent_id)
+                        self.params[ansible_name], dialog_parent_id)
                     idoit_new_data[idoit_name] = new_data[ansible_id_name]
             elif field['type'] == 'float':
                 new_data[ansible_name] = self.params[ansible_name]

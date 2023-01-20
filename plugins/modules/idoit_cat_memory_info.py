@@ -45,7 +45,7 @@ IDOIT_SPEC = r'''
 category: C__CATG__MEMORY
 fields:
   capacity:
-    description: Type of the Memory DDR, DDR2, SDRAM ..
+    description: Size of the RAM in unit
     type: float
   description:
     description: Description of the Memory Module
@@ -58,6 +58,10 @@ fields:
   title:
     description: Something like MemoryStick, Flash, DDRAM, SDRAM, ..
     description_id: Id of title
+    type: dialog
+  type:
+    description: Type of the RAM like DDR, DDR2, DDR3
+    description_id: Id of the type
     type: dialog
   unit:
     description: Unit of the capacity (B,KB,MB,GB,TB)

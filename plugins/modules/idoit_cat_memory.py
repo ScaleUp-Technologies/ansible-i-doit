@@ -19,7 +19,7 @@ extends_documentation_fragment:
 module: idoit_cat_memory
 options:
   capacity:
-    description: Type of the Memory DDR, DDR2, SDRAM ..
+    description: Size of the RAM in unit
     type: float
   description:
     description: Description of the Memory Module
@@ -36,6 +36,12 @@ options:
     type: str
   title_id:
     description: Id of title
+    type: int
+  type:
+    description: Type of the RAM like DDR, DDR2, DDR3
+    type: str
+  type_id:
+    description: Id of the type
     type: int
   unit:
     description: Unit of the capacity (B,KB,MB,GB,TB)
@@ -86,7 +92,7 @@ IDOIT_SPEC = r'''
 category: C__CATG__MEMORY
 fields:
   capacity:
-    description: Type of the Memory DDR, DDR2, SDRAM ..
+    description: Size of the RAM in unit
     type: float
   description:
     description: Description of the Memory Module
@@ -99,6 +105,10 @@ fields:
   title:
     description: Something like MemoryStick, Flash, DDRAM, SDRAM, ..
     description_id: Id of title
+    type: dialog
+  type:
+    description: Type of the RAM like DDR, DDR2, DDR3
+    description_id: Id of the type
     type: dialog
   unit:
     description: Unit of the capacity (B,KB,MB,GB,TB)
