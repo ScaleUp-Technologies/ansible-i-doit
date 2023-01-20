@@ -1,0 +1,46 @@
+category: C__CATG__POWER_CONSUMER
+basename: power_consumer
+single_value_cat: False
+fields:
+  title:
+    description: Title
+    type: str
+  active:
+    type: bool
+    description: Active
+    default: false
+  manufacturer:
+    type: dialog
+    description: Name of Manufactuerer of the device, if not there it will be created
+    description_id: Id of Manufactuerer of the device
+  model:
+    type: dialog
+    dialog_parent: manufacturer
+    description: Model of the device, if not there it will be created
+    description_id: Id of Model of the device
+  volt:
+    type: float
+    description: Voltage
+  watt:
+    type: float
+    description: Watt
+  ampere:
+    type: float
+    description: Ampere
+  btu:
+    type: str
+    description: British thermal unit
+  description:
+    type: str
+    description: Description of the Power Consumer
+doc_examples:
+  - name: Set a new Memory Module
+    scaleuptechnologies.idoit.idoit_power_consumer:
+      idoit: "{{ idoit_access }}"
+      obj_id: 1320
+      id: 2
+      title: "Slot 1"
+      manufacturer: "Dell"
+      volt: 230
+      watt: 550.0
+

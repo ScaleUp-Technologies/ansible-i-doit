@@ -9,7 +9,7 @@ from . import utils as idoit_utils
 from pprint import pprint
 from . import idoit_api
 import json
-
+from math import isclose
 
 class IdoitCategoryModule(AnsibleModule):
     def __init__(self, *args, idoit_spec):
@@ -25,21 +25,28 @@ class IdoitCategoryModule(AnsibleModule):
             obj_id=dict(type="int", required=True),
             state=dict(choices=state_choices, default='present')
         )
+        ansible_fields={}
         for idoit_name in idoit_spec['fields'].keys():
             field = idoit_spec['fields'][idoit_name]
             ansible_name = idoit_name
             if 'ansible_name' in field.keys():
                 ansible_name = field['ansible_name']
+            ansible_fields[ansible_name]=field
             if field['type'] == 'str':
                 arg_spec[ansible_name] = dict(type='str', default='')
             elif field['type'] == 'float':
                 arg_spec[ansible_name] = dict(type='float')
+            elif field['type'] == 'bool':
+                arg_spec[ansible_name] = dict(type='bool')
             elif field['type'] == 'dialog':
                 arg_spec[ansible_name] = dict(type='str')
                 arg_spec[ansible_name+'_id'] = dict(type='int')
+                ansible_fields[ansible_name+'_id']=field
             else:
                 raise Exception('Unknown Type type=%s' % field['type'])
-
+            if 'default' in field.keys():
+                 arg_spec[ansible_name]['default']=field['default']
+        self.ansible_fields=ansible_fields
         if not idoit_spec['single_value_cat']:
             arg_spec['id'] = {
                 'type': 'int',
@@ -73,10 +80,8 @@ class IdoitCategoryModule(AnsibleModule):
                     cat = self.conv_idoit_to_ansible(idoit_cat)
                     for field in self.params['search_by_fields']:
                         if field not in cat.keys():
-                            print("== not found %s ==" % field)
                             equal = False
                         elif cat[field] != self.params[field]:
-                            print("== not equal %s ==" % field)
                             equal = False
                     if equal:
                         old_idoit_data = idoit_cat
@@ -144,6 +149,8 @@ class IdoitCategoryModule(AnsibleModule):
                 idoit_new_data[idoit_name] = new_data[ansible_name]
             elif field['type'] == 'dialog':
                 ansible_id_name = '%s_id' % (ansible_name)
+                my_dialog_api = None
+                my_dialog_id = None
                 if self.params[ansible_name] is not None and self.params[ansible_id_name] is not None:
                     self.fail_json(msg='You can only specify %s or %s' %
                                    (ansible_name, ansible_id_name))
@@ -152,6 +159,8 @@ class IdoitCategoryModule(AnsibleModule):
                 if self.params[ansible_name] is not None:
                     my_dialog_api = idoit_api.createApiDialogs(
                         self.cfg, self.idoit_spec['category'], idoit_name)
+                    if my_dialog_api is None:
+                        raise Exception('Dialog API for type %s is None' % idoit_name)
                 dialog_parent_id = None
                 if 'dialog_parent' in field:
                     dialog_parent_field_name = '%s_id' % field['dialog_parent']
@@ -160,14 +169,20 @@ class IdoitCategoryModule(AnsibleModule):
                         my_msg = 'You need to specify a %s or %s if you want to set %s' % (
                             field['dialog_parent'], dialog_parent_field_name, ansible_name)
                         self.fail_json(msg=my_msg, **result)
-                my_dialog_id = my_dialog_api.get(
-                    self.params[ansible_name], dialog_parent_id)
+                if my_dialog_api is None:
+                    my_dialog_id = None
+                else:
+                    my_dialog_id = my_dialog_api.get(
+                        self.params[ansible_name], dialog_parent_id)
                 if my_dialog_id is not None:
                     new_data[ansible_id_name] = my_dialog_id
                     idoit_new_data[idoit_name] = my_dialog_id
                 elif self.check_mode:
                     result['changed'] = True
                     new_data[ansible_id_name] = -42
+                elif my_dialog_api is None:
+                    new_data[ansible_id_name] = None
+                    idoit_new_data[idoit_name] = None
                 else:
                     new_data[ansible_id_name] = my_dialog_api.create(
                         self.params[ansible_name], dialog_parent_id)
@@ -175,6 +190,12 @@ class IdoitCategoryModule(AnsibleModule):
             elif field['type'] == 'float':
                 new_data[ansible_name] = self.params[ansible_name]
                 idoit_new_data[idoit_name] = new_data[ansible_name]
+            elif field['type'] == 'bool':
+                new_data[ansible_name] = self.params[ansible_name]
+                if new_data[ansible_name]:
+                    idoit_new_data[idoit_name] = 1
+                else:
+                    idoit_new_data[idoit_name] = 0
             else:
                 raise Exception('Unknown Type')
         result['data'] = new_data
@@ -184,6 +205,11 @@ class IdoitCategoryModule(AnsibleModule):
             if key not in old_data.keys():
                 result['changed'] = True
                 sanitized_after[key] = new_data[key]
+            elif self.ansible_fields[key]['type']=='float':
+                if not(isclose(new_data[key],old_data[key],rel_tol=1e-3)):
+                    result['changed'] = True
+                    sanitized_before[key] = old_data[key]
+                    sanitized_after[key] = new_data[key]
             elif new_data[key] != old_data[key]:
                 result['changed'] = True
                 sanitized_before[key] = old_data[key]
@@ -209,7 +235,6 @@ class IdoitCategoryModule(AnsibleModule):
                 "before": sanitized_before,
                 "after": sanitized_after,
             }
-
         self.exit_json(**result)
 
 

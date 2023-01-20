@@ -9,6 +9,7 @@ from .networkport import IDoitNetworkPort
 from .dialog import IDoitDialog
 from .search import IDoitSearch
 from .memory import IDoitMemory
+from .power_consumer import IDoitPowerConsumer
 
 
 def createApiCalls(cfg):
@@ -18,6 +19,7 @@ def createApiCalls(cfg):
     rtn[consts.C__CATG__LOCATION] = IDoitLocation(cfg)
     rtn[consts.C__CATG__NETWORK_PORT] = IDoitNetworkPort(cfg)
     rtn[consts.C__CATG__MEMORY] = IDoitMemory(cfg)
+    rtn[consts.C__CATG__POWER_CONUMER] = IDoitPowerConsumer(cfg)
     for varname in consts.__dict__.keys():
         if not (varname in rtn.keys()):
             if varname.startswith('C__OBJTYPE__'):
@@ -39,6 +41,8 @@ def createApiCall(cfg, category):
         return IDoitMemory(cfg)
     if category == consts.C__CATG__NETWORK_PORT:
         return IDoitNetworkPort(cfg)
+    if category == consts.C__CATG__POWER_CONUMER:
+        return IDoitPowerConsumer(cfg)
     if category.startswith('C__OBJTYPE__'):
         return IDoitObject(cfg, category)
     if category.startswith('C__CATS__') or category.startswith('C__CATG__'):

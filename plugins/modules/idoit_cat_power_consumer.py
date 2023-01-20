@@ -10,19 +10,25 @@ __metaclass__ = type
 DOCUMENTATION = r'''
 author:
 - Sven Anders (during work by ScaleUp Technologies) (@tabacha)
-description: Adds C__CATG__MEMORY category to an object if not there or
-  update values
+description: Adds C__CATG__POWER_CONSUMER category to an object if not there
+  or update values
 extends_documentation_fragment:
 - scaleuptechnologies.idoit.idoit_option
 - scaleuptechnologies.idoit.category_options
 - scaleuptechnologies.idoit.multi_category_options
-module: idoit_cat_memory
+module: idoit_cat_power_consumer
 options:
-  capacity:
-    description: Size of the RAM in unit
+  active:
+    description: Active
+    type: bool
+  ampere:
+    description: Ampere
     type: float
+  btu:
+    description: British thermal unit
+    type: str
   description:
-    description: Description of the Memory Module
+    description: Description of the Power Consumer
     type: str
   manufacturer:
     description: Name of Manufactuerer of the device, if not there it will
@@ -31,39 +37,35 @@ options:
   manufacturer_id:
     description: Id of Manufactuerer of the device
     type: int
+  model:
+    description: Model of the device, if not there it will be created
+    type: str
+  model_id:
+    description: Id of Model of the device
+    type: int
   title:
-    description: Something like MemoryStick, Flash, DDRAM, SDRAM, ..
+    description: Title
     type: str
-  title_id:
-    description: Id of title
-    type: int
-  type:
-    description: Type of the RAM like DDR, DDR2, DDR3
-    type: str
-  type_id:
-    description: Id of the type
-    type: int
-  unit:
-    description: Unit of the capacity (B,KB,MB,GB,TB)
-    type: str
-  unit_id:
-    description: Id of Capacity Unit
-    type: int
-short_description: Create or update a memory category to an object
+  volt:
+    description: Voltage
+    type: float
+  watt:
+    description: Watt
+    type: float
+short_description: Create or update a power_consumer category to an object
 
 '''
 
 EXAMPLES = r'''
 - name: Set a new Memory Module
-  scaleuptechnologies.idoit.idoit_cat_model:
-    capacity: 8388608
-    description: DIMM.Socket.A1 M393B1G70BH0-YK0 131A13D9
+  scaleuptechnologies.idoit.idoit_power_consumer:
     id: 2
     idoit: '{{ idoit_access }}'
-    manufacturer: Samsung
+    manufacturer: Dell
     obj_id: 1320
-    title: SDRAM
-    unit: KB
+    title: Slot 1
+    volt: 230
+    watt: 550.0
 
 '''
 
@@ -90,31 +92,40 @@ return:
 '''
 
 IDOIT_SPEC = r'''
-category: C__CATG__MEMORY
+category: C__CATG__POWER_CONSUMER
 fields:
-  capacity:
-    description: Size of the RAM in unit
+  active:
+    default: false
+    description: Active
+    type: bool
+  ampere:
+    description: Ampere
     type: float
+  btu:
+    description: British thermal unit
+    type: str
   description:
-    description: Description of the Memory Module
+    description: Description of the Power Consumer
     type: str
   manufacturer:
     description: Name of Manufactuerer of the device, if not there it will
       be created
     description_id: Id of Manufactuerer of the device
     type: dialog
+  model:
+    description: Model of the device, if not there it will be created
+    description_id: Id of Model of the device
+    dialog_parent: manufacturer
+    type: dialog
   title:
-    description: Something like MemoryStick, Flash, DDRAM, SDRAM, ..
-    description_id: Id of title
-    type: dialog
-  type:
-    description: Type of the RAM like DDR, DDR2, DDR3
-    description_id: Id of the type
-    type: dialog
-  unit:
-    description: Unit of the capacity (B,KB,MB,GB,TB)
-    description_id: Id of Capacity Unit
-    type: dialog
+    description: Title
+    type: str
+  volt:
+    description: Voltage
+    type: float
+  watt:
+    description: Watt
+    type: float
 single_value_cat: false
 
 '''

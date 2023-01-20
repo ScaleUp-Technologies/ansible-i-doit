@@ -57,6 +57,19 @@
         description: '<p>DIMM.Socket.A2 M393B1G70BH0-YK0 191B13X9</p>'
       tags:
         - mem
+    - name: Set Memory for server ceph-mon01.os1 by fields
+      scaleuptechnologies.idoit.idoit_cat_power_consumer:
+        idoit: "{{ idoit_access }}"
+        obj_id: 4005
+        search_by_fields:
+          - title
+        title: 'PS Slot 1'
+        manufacturer: Dell
+        watt: 550
+        volt: 230
+        ampere: "{{ 550/230 }}"
+      tags:
+        - power_consumer
   vars:
     idoit_access:
       api_key: "{{ lookup('ansible.builtin.env', 'IDOIT_KEY') }}"

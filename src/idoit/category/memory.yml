@@ -29,6 +29,7 @@ doc_examples:
     scaleuptechnologies.idoit.idoit_cat_model:
       idoit: "{{ idoit_access }}"
       obj_id: 1320
+      id: 2
       manufacturer: 'Samsung'
       title: 'SDRAM'
       capacity: 8388608
