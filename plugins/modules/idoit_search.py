@@ -74,7 +74,8 @@ def run_module():
     }
     for ele in search_result:
         add = False
-        if (module.params['only_exact_match'] == False) or (ele['value'] == module.params['search']):
+        if ((module.params['only_exact_match'] is False) or
+           (ele['value'] == module.params['search'])):
             add = True
         if (module.params['only_key'] is not None) and ele['key'] != module.params['only_key']:
             add = False

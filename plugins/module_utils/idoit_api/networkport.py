@@ -42,4 +42,5 @@ class IDoitNetworkPort(IDoitCategory):
 
     def save_category_if_changed(self, objId, data):
         raise Exception(
-            'Funktioniert nur wenn es nur eine Kategorie gibt, muss mit ID spezifiziert werden')
+            'Funktioniert nur wenn es nur eine Kategorie gibt, ' +
+            'muss mit ID spezifiziert werden')

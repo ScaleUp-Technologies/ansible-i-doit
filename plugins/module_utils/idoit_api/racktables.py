@@ -21,7 +21,10 @@ class Racktables(IDoitCategory):
                 self.rt_type = field
             if title == 'Racktables Inhalt':
                 self.rt_content = field
-        if (self.rt_link == '') or (self.rt_id == '') or (self.rt_type == '') or (self.rt_content == ''):
+        if ((self.rt_link == '') or
+           (self.rt_id == '') or
+           (self.rt_type == '') or
+           (self.rt_content == '')):
             raise Exception('Object nicht deifinert')
 
     def save_category(self, objId, data):

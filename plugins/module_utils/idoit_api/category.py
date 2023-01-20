@@ -105,7 +105,7 @@ class IDoitCategory(IDoitApiBase):
                           if callable(getattr(self, method_name))]
         field = self.fields[fieldname]
         if fieldname in data.keys():
-            if data[fieldname] == None:
+            if data[fieldname] is None:
                 return None
             field_method_name = 'convert_field_with_name_%s' % fieldname
             if field_method_name in object_methods:

@@ -20,11 +20,12 @@ class IDoitDialog(IDoitApiBase):
         else:
             r = self.cache
         for entry in r['result']:
-            if parent == None:
+            if parent is None:
                 if value == entry['title']:
                     return int(entry['id'])
             else:
-                if value == entry['title'] and entry['parent']['id'] == str(parent):
+                if (value == entry['title'] and
+                   entry['parent']['id'] == str(parent)):
                     return int(entry['id'])
         return None
 
@@ -35,13 +36,13 @@ class IDoitDialog(IDoitApiBase):
             'value': value
         }
         self.cache = {}
-        if not parent is None:
+        if parent is not None:
             params['parent'] = parent
         r = self.xml_rpc_call('cmdb.dialog.create', params)
         return r['result']['entry_id']
 
     def create_or_get_id(self, value: str, parent: int = None):
         id = self.get(value, parent)
-        if id == None:
+        if id is None:
             id = self.create(value, parent)
         return id

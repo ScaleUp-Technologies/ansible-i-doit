@@ -11,6 +11,7 @@ from . import idoit_api
 import json
 from math import isclose
 
+
 class IdoitCategoryModule(AnsibleModule):
     def __init__(self, *args, idoit_spec):
 
@@ -25,13 +26,13 @@ class IdoitCategoryModule(AnsibleModule):
             obj_id=dict(type="int", required=True),
             state=dict(choices=state_choices, default='present')
         )
-        ansible_fields={}
+        ansible_fields = {}
         for idoit_name in idoit_spec['fields'].keys():
             field = idoit_spec['fields'][idoit_name]
             ansible_name = idoit_name
             if 'ansible_name' in field.keys():
                 ansible_name = field['ansible_name']
-            ansible_fields[ansible_name]=field
+            ansible_fields[ansible_name] = field
             if field['type'] == 'str':
                 arg_spec[ansible_name] = dict(type='str', default='')
             elif field['type'] == 'float':
@@ -41,12 +42,12 @@ class IdoitCategoryModule(AnsibleModule):
             elif field['type'] == 'dialog':
                 arg_spec[ansible_name] = dict(type='str')
                 arg_spec[ansible_name+'_id'] = dict(type='int')
-                ansible_fields[ansible_name+'_id']=field
+                ansible_fields[ansible_name+'_id'] = field
             else:
                 raise Exception('Unknown Type type=%s' % field['type'])
             if 'default' in field.keys():
-                 arg_spec[ansible_name]['default']=field['default']
-        self.ansible_fields=ansible_fields
+                arg_spec[ansible_name]['default'] = field['default']
+        self.ansible_fields = ansible_fields
         if not idoit_spec['single_value_cat']:
             arg_spec['id'] = {
                 'type': 'int',
@@ -103,7 +104,7 @@ class IdoitCategoryModule(AnsibleModule):
 
     def absent(self, obj_id, old_idoit_data):
         result = {}
-        if old_idoit_data == None:
+        if old_idoit_data is None:
             result['changed'] = False
         else:
             if self.check_mode:
@@ -160,7 +161,8 @@ class IdoitCategoryModule(AnsibleModule):
                     my_dialog_api = idoit_api.createApiDialogs(
                         self.cfg, self.idoit_spec['category'], idoit_name)
                     if my_dialog_api is None:
-                        raise Exception('Dialog API for type %s is None' % idoit_name)
+                        raise Exception(
+                            'Dialog API for type %s is None' % idoit_name)
                 dialog_parent_id = None
                 if 'dialog_parent' in field:
                     dialog_parent_field_name = '%s_id' % field['dialog_parent']
@@ -205,8 +207,8 @@ class IdoitCategoryModule(AnsibleModule):
             if key not in old_data.keys():
                 result['changed'] = True
                 sanitized_after[key] = new_data[key]
-            elif self.ansible_fields[key]['type']=='float':
-                if not(isclose(new_data[key],old_data[key],rel_tol=1e-3)):
+            elif self.ansible_fields[key]['type'] == 'float':
+                if not (isclose(new_data[key], old_data[key], rel_tol=1e-3)):
                     result['changed'] = True
                     sanitized_before[key] = old_data[key]
                     sanitized_after[key] = new_data[key]
