@@ -20,6 +20,9 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 
+env:
+  ANSIBLE_COLLECTIONS_PATH: "${{GITHUB_WORKSPACE}}"
+
 jobs:
   # Build job
   build:
@@ -32,12 +35,15 @@ jobs:
           python-version: '3.9'
           cache: 'pip' # caching pip dependencies
       - run: pip install -r doku-dest/requirements.txt
+      - name: Test pwd
+        run: pwd
       - name: Generate HTML
         run: doku-dest/build.sh
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
           path: doku-dest/build/html/
+
   # Deployment job
   deploy:
     environment:
