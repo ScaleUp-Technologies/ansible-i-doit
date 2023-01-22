@@ -20,8 +20,8 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 
-env:
-  ANSIBLE_COLLECTIONS_PATH: "{{ GITHUB_WORKSPACE }}"
+#env:
+#  ANSIBLE_COLLECTIONS_PATH: "{{ GITHUB_WORKSPACE }}"
 
 jobs:
   # Build job
@@ -35,8 +35,10 @@ jobs:
           python-version: '3.9'
           cache: 'pip' # caching pip dependencies
       - run: pip install -r doku-dest/requirements.txt
-      - name: Test pwd
-        run: pwd
+      - name: Generate Collection
+        run: ansible-galaxy collection build --output-path ./gy_build
+      - name: Install collection
+        run: ansible-galaxy collection install --force ./gy_build/*.tar.gz
       - name: Generate HTML
         run: doku-dest/build.sh
       - name: Upload artifact
