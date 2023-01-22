@@ -1,5 +1,4 @@
-# Sample workflow for building and deploying a Jekyll site to GitHub Pages
-name: Deploy Jekyll with GitHub Pages dependencies preinstalled
+name: Deploy Ansible Doc to Github Pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -35,6 +34,8 @@ jobs:
           python-version: '3.9'
           cache: 'pip' # caching pip dependencies
       - run: pip install -r doku-dest/requirements.txt
+      - name: Run Build
+        run: ./build.py
       - name: Generate Collection
         run: ansible-galaxy collection build --output-path ./gy_build
       - name: Install collection
