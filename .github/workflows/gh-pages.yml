@@ -21,7 +21,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  ANSIBLE_COLLECTIONS_PATH: "${{ env.GITHUB_WORKSPACE}}"
+  ANSIBLE_COLLECTIONS_PATH: "{{ GITHUB_WORKSPACE }}"
 
 jobs:
   # Build job
