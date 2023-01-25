@@ -26,6 +26,8 @@ def render_cat(base_spec, template):
             idoit_doc_options[ansible_name]['type'] = 'float'
         elif field['type'] == 'bool':
             idoit_doc_options[ansible_name]['type'] = 'bool'
+        elif field['type'] == 'int':
+            idoit_doc_options[ansible_name]['type'] = 'int'
         elif field['type'] != 'str':
             raise Exception('Unsupported type %s in %s.yml' %
                             (field['type'], base_spec['basename']))

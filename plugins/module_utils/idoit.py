@@ -37,6 +37,8 @@ class IdoitCategoryModule(AnsibleModule):
                 arg_spec[ansible_name] = dict(type='str', default='')
             elif field['type'] == 'float':
                 arg_spec[ansible_name] = dict(type='float')
+            elif field['type'] == 'int':
+                arg_spec[ansible_name] = dict(type='int')
             elif field['type'] == 'bool':
                 arg_spec[ansible_name] = dict(type='bool')
             elif field['type'] == 'dialog':
@@ -192,6 +194,9 @@ class IdoitCategoryModule(AnsibleModule):
             elif field['type'] == 'float':
                 new_data[ansible_name] = self.params[ansible_name]
                 idoit_new_data[idoit_name] = new_data[ansible_name]
+            elif field['type'] == 'int':
+                new_data[ansible_name] = self.params[ansible_name]
+                idoit_new_data[idoit_name] = new_data[ansible_name]
             elif field['type'] == 'bool':
                 new_data[ansible_name] = self.params[ansible_name]
                 if new_data[ansible_name]:
@@ -208,7 +213,15 @@ class IdoitCategoryModule(AnsibleModule):
                 result['changed'] = True
                 sanitized_after[key] = new_data[key]
             elif self.ansible_fields[key]['type'] == 'float':
-                if not (isclose(new_data[key], old_data[key], rel_tol=1e-3)):
+                changed_float=False
+                if new_data[key] is None and old_data[key] is not None:
+                    changed_float=True
+                if new_data[key] is not None and old_data[key] is None:
+                    changed_float=True
+                if new_data[key] is not None and old_data[key] is not None:
+                    if not (isclose(new_data[key], old_data[key], rel_tol=1e-3)):
+                        changed_float=True
+                if changed_float:
                     result['changed'] = True
                     sanitized_before[key] = old_data[key]
                     sanitized_after[key] = new_data[key]
@@ -259,6 +272,8 @@ class IdoitCategoryInfoModule(AnsibleModule):
             if field['type'] == 'str':
                 ans_data[ansible_name] = idoit_data[idoit_name]
             elif field['type'] == 'float':
+                ans_data[ansible_name] = idoit_data[idoit_name]
+            elif field['type'] == 'int':
                 ans_data[ansible_name] = idoit_data[idoit_name]
             elif field['type'] == 'dialog':
                 ansible_id_name = '%s_id' % (ansible_name)
