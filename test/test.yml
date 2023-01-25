@@ -70,6 +70,26 @@
         ampere: "{{ 550/230 }}"
       tags:
         - power_consumer
+    - name: Get CPU Info
+      scaleuptechnologies.idoit.idoit_cat_cpu_info:
+        idoit: "{{ idoit_access }}"
+        obj_id: 4005
+      register: cpu_info
+      tags:
+        - cpu
+    - name: Set CPU Info
+      scaleuptechnologies.idoit.idoit_cat_cpu:
+        idoit: "{{ idoit_access }}"
+        obj_id: 4005
+        id: "{{ cpu_info.data[0]['id'] }}"
+        title: "Slot 0: Intel(R) Xeon(R) CPU E5-2430 v2 @ 2.50GHz"
+        frequency: 2.5
+        frequency_unit: GHz
+        manufacturer: Intel
+        type: Xeon
+        cores: 2
+      tags:
+        - cpu
   vars:
     idoit_access:
       api_key: "{{ lookup('ansible.builtin.env', 'IDOIT_KEY') }}"
