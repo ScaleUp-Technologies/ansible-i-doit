@@ -1,0 +1,40 @@
+category: C__CATG__CPU
+basename: cpu
+single_value_cat: False
+fields:
+  title:
+    description: Title
+    type: str
+  manufacturer:
+    type: dialog
+    description: Name of Manufactuerer of the device, if not there it will be created
+    description_id: Id of Manufactuerer of the device
+  type:
+    type: dialog
+    description: CPU Type of the device, if not there it will be created
+    description_id: Id of Type of the device
+  frequency:
+    type: float
+    description: CPU-Frequency
+  frequency_unit:
+    type: dialog
+    description: Unit of the frequency (KHz,MHz,GHz,THz)
+    description_id: Id of the frequency
+  cores:
+    type: int
+    description: Number of CPU cores
+  description:
+    type: str
+    description: Description of the CPU
+doc_examples:
+  - name: Set a new CPU
+    scaleuptechnologies.idoit.idoit_cat_model:
+      idoit: "{{ idoit_access }}"
+      obj_id: 1320
+      id: 2
+      title: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
+      manufacturer: Intel
+      type: Core I7
+      frequency: 2300
+      frequency_unit: MHz
+      cores: 8
