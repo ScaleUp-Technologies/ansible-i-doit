@@ -1,0 +1,39 @@
+category: C__CATG__NETWORK_INTERFACE
+basename: net_interface
+single_value_cat: False
+fields:
+  title:
+    description: Title
+    type: str
+  manufacturer:
+    type: dialog
+    description: Name of Manufactuerer of the device, if not there it will be created
+    description_id: Id of Manufactuerer of the device
+  model:
+    type: dialog
+    description: Model of the device, if not there it will be created
+    description_id: Id of Model of the device
+  serial:
+    type: str
+    description: Serial number
+  slot:
+    type: str
+    description: Slotnumber
+  firmware:
+    type: str
+    description: Firmware
+  description:
+    type: str
+    description: Description of the Model
+doc_examples:
+  - name: Set Network Interface
+    scaleuptechnologies.idoit.idoit_net_interface:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 4005
+        search_by_fields:
+          - title
+        manufacturer: Broadcom Corp
+        model: Broadcom Gigabit Ethernet BCM5720
+        serial: C8 1F 66 CA 29 51
+        slot: "NIC.Embedded.1-1-1"
+        title: "NIC.Embedded.1-1-1 C8 1F 66 CA 29 51"

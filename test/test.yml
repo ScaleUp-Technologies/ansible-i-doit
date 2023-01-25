@@ -4,15 +4,15 @@
   tasks:
     - name: Search for Server with name
       scaleuptechnologies.idoit.idoit_search:
-        idoit: "{{ idoit_access }}"
+        idoit: "{{ idoit_access_test }}"
         search: "ceph004.occ1.ham1.int.yco.de"
     - name: Get Model for Object 1320
       scaleuptechnologies.idoit.idoit_cat_model_info:
-        idoit: "{{ idoit_access }}"
+        idoit: "{{ idoit_access_test }}"
         obj_id: 1320
     - name: Set a Model for a machine with serial
       scaleuptechnologies.idoit.idoit_cat_model:
-        idoit: "{{ idoit_access }}"
+        idoit: "{{ idoit_access_test }}"
         obj_id: 1320
         manufacturer: 'HP'
         model: 'ProLiant DL160G6'
@@ -20,21 +20,21 @@
         serial: 'Test 42'
     - name: Set a Model for a machine without serial
       scaleuptechnologies.idoit.idoit_cat_model:
-        idoit: "{{ idoit_access }}"
+        idoit: "{{ idoit_access_test }}"
         obj_id: 1320
         manufacturer: 'HP'
         model: 'ProLiant DL160G6'
         service_tag: CZJ037040C
     - name: Get Memory Info for server ceph-mon01.os1
       scaleuptechnologies.idoit.idoit_cat_memory_info:
-        idoit: "{{ idoit_access }}"
+        idoit: "{{ idoit_access_test }}"
         obj_id: 4005
       register: mem_info
       tags:
         - mem
     - name: Set Memory for server ceph-mon01.os1 by id
       scaleuptechnologies.idoit.idoit_cat_memory:
-        idoit: "{{ idoit_access }}"
+        idoit: "{{ idoit_access_test }}"
         obj_id: 4005
         id: "{{ mem_info.data[0]['id'] }}"
         manufacturer: 'Samsung'
@@ -46,7 +46,7 @@
         - mem
     - name: Set Memory for server ceph-mon01.os1 by fields
       scaleuptechnologies.idoit.idoit_cat_memory:
-        idoit: "{{ idoit_access }}"
+        idoit: "{{ idoit_access_test }}"
         obj_id: 4005
         search_by_fields:
           - description
@@ -59,7 +59,7 @@
         - mem
     - name: Set Memory for server ceph-mon01.os1 by fields
       scaleuptechnologies.idoit.idoit_cat_power_consumer:
-        idoit: "{{ idoit_access }}"
+        idoit: "{{ idoit_access_test }}"
         obj_id: 4005
         search_by_fields:
           - title
@@ -72,14 +72,14 @@
         - power_consumer
     - name: Get CPU Info
       scaleuptechnologies.idoit.idoit_cat_cpu_info:
-        idoit: "{{ idoit_access }}"
+        idoit: "{{ idoit_access_test }}"
         obj_id: 4005
       register: cpu_info
       tags:
         - cpu
     - name: Set CPU Info
       scaleuptechnologies.idoit.idoit_cat_cpu:
-        idoit: "{{ idoit_access }}"
+        idoit: "{{ idoit_access_test }}"
         obj_id: 4005
         id: "{{ cpu_info.data[0]['id'] }}"
         title: "Slot 0: Intel(R) Xeon(R) CPU E5-2430 v2 @ 2.50GHz"
@@ -90,8 +90,30 @@
         cores: 2
       tags:
         - cpu
+
+    - name: Set Network Interface
+      scaleuptechnologies.idoit.idoit_cat_net_interface_info:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 4005
+      tags:
+        - net_interface
+
+    - name: Set Network Interface
+      scaleuptechnologies.idoit.idoit_cat_net_interface:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 4005
+        search_by_fields:
+          - title
+        manufacturer: Broadcom Corp
+        model: Broadcom Gigabit Ethernet BCM5720
+        serial: C8 1F 66 CA 29 51
+        slot: "NIC.Embedded.1-1-1"
+        title: "NIC.Embedded.1-1-1 C8 1F 66 CA 29 51"
+      tags:
+        - net_interface
+
   vars:
-    idoit_access:
+    idoit_access_test:
       api_key: "{{ lookup('ansible.builtin.env', 'IDOIT_KEY') }}"
       user: "{{ lookup('ansible.builtin.env', 'IDOIT_USER') }}"
       password: "{{ lookup('ansible.builtin.env', 'IDOIT_PASS') }}"
