@@ -21,7 +21,7 @@ fields:
     type: str
     description: Firmware
   description:
-    type: html
+    type: str
     description: Description of the Model
 doc_examples:
   - name: Set a new Controller
