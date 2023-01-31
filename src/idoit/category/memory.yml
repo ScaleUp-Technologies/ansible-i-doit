@@ -18,7 +18,7 @@ fields:
     description: Unit of the capacity (B,KB,MB,GB,TB)
     description_id: Id of Capacity Unit
   description:
-    type: str
+    type: html
     description: Description of the Memory Module
   type:
     type: dialog

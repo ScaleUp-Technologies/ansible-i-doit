@@ -1,0 +1,30 @@
+category: C__CATG__ACCESS
+basename: access
+single_value_cat: False
+fields:
+  title:
+    description: Title
+    type: str
+  type:
+    type: dialog
+    description: Type of the Access
+    description_id: Id of the type
+  url:
+    type: str
+    description: Url
+  primary:
+    type: bool
+    default: False
+    description: Is this the primary access
+  description:
+    type: html
+    description: Description of the Model
+doc_examples:
+  - name: Set a new Idrac
+    scaleuptechnologies.idoit.idoit_cat_access:
+      idoit: "{{ idoit_access }}"
+      obj_id: 1320
+      title: "IDRAC"
+      type: "BMC"
+      url: "https://idrac-server1.example.org"
+      primary: False

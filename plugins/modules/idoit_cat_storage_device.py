@@ -10,16 +10,22 @@ __metaclass__ = type
 DOCUMENTATION = r'''
 author:
 - Sven Anders (during work by ScaleUp Technologies) (@tabacha)
-description: Adds C__CATG__NETWORK_INTERFACE category to an object if not
-  there or update values
+description: Adds C__CATG__STORAGE_DEVICE category to an object if not there
+  or update values
 extends_documentation_fragment:
 - scaleuptechnologies.idoit.idoit_option
 - scaleuptechnologies.idoit.category_options
 - scaleuptechnologies.idoit.multi_category_options
-module: idoit_cat_net_interface
+module: idoit_cat_storage_device
 options:
+  capacity:
+    description: Capacity of the device
+    type: float
+  controller_id:
+    description: Id of the controller
+    type: int
   description:
-    description: Description of the Model
+    description: Description
     type: str
   firmware:
     description: Firmware
@@ -40,28 +46,38 @@ options:
   serial:
     description: Serial number
     type: str
-  slot:
-    description: Slotnumber
-    type: str
   title:
     description: Title
     type: str
-short_description: Create or update a net_interface category to an object
+  type:
+    description: Type of the Device like CD/DVD-ROM, Floppy Drive, Hard
+      Drive, SSD, ..
+    type: str
+  type_id:
+    description: Id of the type
+    type: int
+  unit:
+    description: Memory unit of the capacity like B, KB, MB, TB, GB
+    type: str
+  unit_id:
+    description: Id of the memory unit
+    type: int
+short_description: Create or update a storage_device category to an object
 
 '''
 
 EXAMPLES = r'''
-- name: Set Network Interface
-  scaleuptechnologies.idoit.idoit_net_interface:
-    idoit: '{{ idoit_access_test }}'
-    manufacturer: Broadcom Corp
-    model: Broadcom Gigabit Ethernet BCM5720
-    obj_id: 4005
-    search_by_fields:
-    - title
-    serial: C8 1F 66 CA 29 51
-    slot: NIC.Embedded.1-1-1
-    title: NIC.Embedded.1-1-1 C8 1F 66 CA 29 51
+- name: Set a new Disk
+  scaleuptechnologies.idoit.idoit_cat_storage_device:
+    capacity: 250
+    firmware: 21.3.4-0001
+    idoit: '{{ idoit_access }}'
+    manufacturer: Samsung
+    model: SM2300
+    obj_id: 1320
+    title: Slot 1,2
+    type: SSD
+    unit: GB
 
 '''
 
@@ -88,11 +104,18 @@ return:
 '''
 
 IDOIT_SPEC = r'''
-category: C__CATG__NETWORK_INTERFACE
+category: C__CATG__STORAGE_DEVICE
 fields:
+  capacity:
+    description: Capacity of the device
+    type: float
+  controller:
+    ansible_name: controller_id
+    description: Id of the controller
+    type: int
   description:
-    description: Description of the Model
-    type: html
+    description: Description
+    type: str
   firmware:
     description: Firmware
     type: str
@@ -104,16 +127,23 @@ fields:
   model:
     description: Model of the device, if not there it will be created
     description_id: Id of Model of the device
+    dialog_parent: manufacturer
     type: dialog
   serial:
     description: Serial number
     type: str
-  slot:
-    description: Slotnumber
-    type: str
   title:
     description: Title
-    type: str
+    type: html
+  type:
+    description: Type of the Device like CD/DVD-ROM, Floppy Drive, Hard
+      Drive, SSD, ..
+    description_id: Id of the type
+    type: dialog
+  unit:
+    description: Memory unit of the capacity like B, KB, MB, TB, GB
+    description_id: Id of the memory unit
+    type: dialog
 single_value_cat: false
 
 '''

@@ -16,7 +16,7 @@ fields:
     type: str
     description: Firmware
   description:
-    type: str
+    type: html
     description: Description of the Model
   manufacturer:
     type: dialog

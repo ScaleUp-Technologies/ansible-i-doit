@@ -18,10 +18,13 @@ class IDoitCategory(IDoitApiBase):
                 default = r['result'][fieldname]['ui']['default'] or None
             self.fields[fieldname] = {
                 'data_type': r['result'][fieldname]['data']['type'],
+                'info_type': r['result'][fieldname]['info']['type'],
                 'ui_type': r['result'][fieldname]['ui']['type'],
                 'default': default,
                 'title': r['result'][fieldname]['info']['title']
             }
+    def is_dialog_plus_field(self, fieldname):
+        return (self.fields[fieldname]['info_type'] == 'dialog_plus')
 
     def save_category(self, objId, data):
         sdata = deepcopy(data)
@@ -116,6 +119,8 @@ class IDoitCategory(IDoitApiBase):
                 if field['ui_type'] == 'text':
                     if field['data_type'] == 'int':
                         return int(data[fieldname])
+                    if field['data_type'] == 'double':
+                        return float(data[fieldname])
                     if field['data_type'] == 'float':
                         return float(data[fieldname])
                     if field['data_type'] == 'link':

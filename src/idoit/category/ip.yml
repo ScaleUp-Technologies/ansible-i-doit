@@ -1,0 +1,78 @@
+category: C__CATG__IP
+basename: ip
+single_value_cat: False
+fields:
+  net_type:
+    type: dialog
+    description: Net Type (AT, IPv4, IPv6, IPX)
+    description_id: Id of the type
+  primary:
+    type: bool
+    default: False
+    description: Is this the primary ip
+  active:
+    type: bool
+    default: False
+    description: Is this the ip active
+  net:
+    type: int
+    ansible_name: net_id
+    description: Id of the assigned Network
+  zone:
+    type: dialog
+    description: Zone
+    description_id: Id of the zone
+  ipv4_assignment:
+    type: dialog
+    description: Address sssignment (DHCP, DHCP reserved, Static, unnumberd)
+    description_id: Id of the type
+  ipv4_address:
+    type: str
+    description: Ip Address
+  ipv6_address:
+    type: str
+    description: Ip Address
+  ipv6_assignment:
+    type: dialog
+    description: Address sssignment (DHCPv6, SLAAC)
+    description_id: Id of the type
+  ipv6_scope:
+    type: dialog
+    description: Address sssignment (Global unicast, Link Local, unique Local)
+    description_id: Id of the type
+  hostname:
+    type: str
+    description: Hostname without Domain
+  dns_server:
+    ansible_name: dns_server_id
+    type: int
+    description: Id of the DNS Server
+#  aliases:
+#    type n2m
+#  dns_domain:
+#    ansible_name: dns_search_domains
+#    type: list
+#    description: DNS Search Domain
+  assigned_port:
+    type: int
+    ansible_name: assigned_port_id
+    description: Id of the assigned port
+  use_standard_gateway:
+    ansible_name: is_gateway
+    type: bool
+    default: False
+    description: Is the default gateway of the network
+  domain:
+    type: str
+    description: Doamin
+  description:
+    type: html
+    description: Description of the Model
+doc_examples:
+  - name: Set a new Idrac
+    scaleuptechnologies.idoit.idoit_cat_ip:
+      idoit: "{{ idoit_access }}"
+      obj_id: 1320
+      net_type: IPv4
+      ipv4_address: 192.168.11.2
+      primary: False

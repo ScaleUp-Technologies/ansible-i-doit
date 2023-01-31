@@ -49,7 +49,7 @@ fields:
     type: int
   description:
     description: Description of the CPU
-    type: str
+    type: html
   frequency:
     description: CPU-Frequency
     type: float

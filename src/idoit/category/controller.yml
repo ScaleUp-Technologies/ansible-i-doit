@@ -1,0 +1,34 @@
+category: C__CATG__CONTROLLER
+basename: controller
+single_value_cat: False
+fields:
+  title:
+    description: Title
+    type: str
+  manufacturer:
+    type: dialog
+    description: Name of Manufactuerer of the device, if not there it will be created
+    description_id: Id of Manufactuerer of the device
+  model:
+    type: dialog
+    description: Model of the device, if not there it will be created
+    description_id: Id of Model of the device
+  type:
+    type: dialog
+    description: Type of the Controller like ATA, SAS, SATA, USB
+    description_id: Id of the type
+  firmware:
+    type: str
+    description: Firmware
+  description:
+    type: html
+    description: Description of the Model
+doc_examples:
+  - name: Set a new Controller
+    scaleuptechnologies.idoit.idoit_cat_controller:
+      idoit: "{{ idoit_access }}"
+      obj_id: 1320
+      title: "1: PERC H710 Mini (Embedded)"
+      firmware: "21.3.4-0001"
+      manufacturer: Dell
+      model: PERC H710

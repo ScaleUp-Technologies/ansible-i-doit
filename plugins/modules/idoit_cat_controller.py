@@ -10,29 +10,20 @@ __metaclass__ = type
 DOCUMENTATION = r'''
 author:
 - Sven Anders (during work by ScaleUp Technologies) (@tabacha)
-description: Adds C__CATG__CPU category to an object if not there or update
-  values
+description: Adds C__CATG__CONTROLLER category to an object if not there
+  or update values
 extends_documentation_fragment:
 - scaleuptechnologies.idoit.idoit_option
 - scaleuptechnologies.idoit.category_options
 - scaleuptechnologies.idoit.multi_category_options
-module: idoit_cat_cpu
+module: idoit_cat_controller
 options:
-  cores:
-    description: Number of CPU cores
-    type: int
   description:
-    description: Description of the CPU
+    description: Description of the Model
     type: str
-  frequency:
-    description: CPU-Frequency
-    type: float
-  frequency_unit:
-    description: Unit of the frequency (KHz,MHz,GHz,THz)
+  firmware:
+    description: Firmware
     type: str
-  frequency_unit_id:
-    description: Id of the frequency
-    type: int
   manufacturer:
     description: Name of Manufactuerer of the device, if not there it will
       be created
@@ -40,31 +31,34 @@ options:
   manufacturer_id:
     description: Id of Manufactuerer of the device
     type: int
+  model:
+    description: Model of the device, if not there it will be created
+    type: str
+  model_id:
+    description: Id of Model of the device
+    type: int
   title:
     description: Title
     type: str
   type:
-    description: CPU Type of the device, if not there it will be created
+    description: Type of the Controller like ATA, SAS, SATA, USB
     type: str
   type_id:
-    description: Id of Type of the device
+    description: Id of the type
     type: int
-short_description: Create or update a cpu category to an object
+short_description: Create or update a controller category to an object
 
 '''
 
 EXAMPLES = r'''
-- name: Set a new CPU
-  scaleuptechnologies.idoit.idoit_cat_cpu:
-    cores: 8
-    frequency: 2300
-    frequency_unit: MHz
-    id: 2
+- name: Set a new Controller
+  scaleuptechnologies.idoit.idoit_cat_controller:
+    firmware: 21.3.4-0001
     idoit: '{{ idoit_access }}'
-    manufacturer: Intel
+    manufacturer: Dell
+    model: PERC H710
     obj_id: 1320
-    title: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
-    type: Core I7
+    title: '1: PERC H710 Mini (Embedded)'
 
 '''
 
@@ -91,32 +85,29 @@ return:
 '''
 
 IDOIT_SPEC = r'''
-category: C__CATG__CPU
+category: C__CATG__CONTROLLER
 fields:
-  cores:
-    description: Number of CPU cores
-    type: int
   description:
-    description: Description of the CPU
+    description: Description of the Model
     type: html
-  frequency:
-    description: CPU-Frequency
-    type: float
-  frequency_unit:
-    description: Unit of the frequency (KHz,MHz,GHz,THz)
-    description_id: Id of the frequency
-    type: dialog
+  firmware:
+    description: Firmware
+    type: str
   manufacturer:
     description: Name of Manufactuerer of the device, if not there it will
       be created
     description_id: Id of Manufactuerer of the device
     type: dialog
+  model:
+    description: Model of the device, if not there it will be created
+    description_id: Id of Model of the device
+    type: dialog
   title:
     description: Title
     type: str
   type:
-    description: CPU Type of the device, if not there it will be created
-    description_id: Id of Type of the device
+    description: Type of the Controller like ATA, SAS, SATA, USB
+    description_id: Id of the type
     type: dialog
 single_value_cat: false
 

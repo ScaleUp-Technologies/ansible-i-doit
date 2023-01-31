@@ -17,9 +17,9 @@ class IdoitCategoryModule(AnsibleModule):
 
         self.idoit_spec = idoit_spec
         if idoit_spec['single_value_cat']:
-            state_choices = ['present']
+            state_choices = ['present', 'merge']
         else:
-            state_choices = ['absent', 'present']
+            state_choices = ['absent', 'merge', 'present']
 
         arg_spec = dict(
             idoit=idoit_utils.idoit_argument_spec,
@@ -34,7 +34,9 @@ class IdoitCategoryModule(AnsibleModule):
                 ansible_name = field['ansible_name']
             ansible_fields[ansible_name] = field
             if field['type'] == 'str':
-                arg_spec[ansible_name] = dict(type='str', default='')
+                arg_spec[ansible_name] = dict(type='str')
+            elif field['type'] == 'html':
+                arg_spec[ansible_name] = dict(type='str')
             elif field['type'] == 'float':
                 arg_spec[ansible_name] = dict(type='float')
             elif field['type'] == 'int':
@@ -47,8 +49,6 @@ class IdoitCategoryModule(AnsibleModule):
                 ansible_fields[ansible_name+'_id'] = field
             else:
                 raise Exception('Unknown Type type=%s' % field['type'])
-            if 'default' in field.keys():
-                arg_spec[ansible_name]['default'] = field['default']
         self.ansible_fields = ansible_fields
         if not idoit_spec['single_value_cat']:
             arg_spec['id'] = {
@@ -99,10 +99,14 @@ class IdoitCategoryModule(AnsibleModule):
             else:
                 old_idoit_data = {}
         if self.params['state'] == 'present':
-            self.present(old_idoit_data)
-        else:
+            self.present(old_idoit_data, False)
+        elif self.params['state'] == 'merge':
+            self.present(old_idoit_data, True)
+        elif self.params['state'] == 'absent':
             # state absent
             self.absent(self.params['obj_id'], old_idoit_data)
+        else:
+            self.fail_json('Unknown state')
 
     def absent(self, obj_id, old_idoit_data):
         result = {}
@@ -131,7 +135,53 @@ class IdoitCategoryModule(AnsibleModule):
                 data[ansible_name] = idoit_data[idoit_name]
         return data
 
-    def present(self,  old_idoit_data):
+    def dialog_field(self, field, ansible_name, idoit_name, new_data):
+        ansible_id_name = '%s_id' % (ansible_name)
+        my_dialog_api = None
+        my_dialog_id = None
+        if self.params[ansible_name] is not None and self.params[ansible_id_name] is not None:
+            self.fail_json(msg='You can only specify %s or %s' %
+                           (ansible_name, ansible_id_name))
+        if self.params[ansible_id_name] is not None:
+            my_dialog_id = self.params[ansible_id_name]
+        if self.params[ansible_name] is not None:
+            my_dialog_api = idoit_api.createApiDialogs(
+                self.cfg, self.idoit_spec['category'], idoit_name)
+            if my_dialog_api is None:
+                raise Exception(
+                    'Dialog API for type %s is None' % idoit_name)
+            dialog_parent_id = None
+            if 'dialog_parent' in field:
+                dialog_parent_field_name = '%s_id' % field['dialog_parent']
+                dialog_parent_id = new_data[dialog_parent_field_name]
+                if dialog_parent_id is None:
+                    my_msg = 'You need to specify a %s or %s if you want to set %s' % (
+                        field['dialog_parent'], dialog_parent_field_name, ansible_name)
+                    self.fail_json(msg=my_msg)
+            if my_dialog_api is None:
+                my_dialog_id = None
+            else:
+                my_dialog_id = my_dialog_api.get_ignore_case(
+                    self.params[ansible_name], dialog_parent_id)
+        if my_dialog_id is not None:
+            return (False, my_dialog_id)
+        elif self.check_mode:
+            return (True, -42)
+        elif my_dialog_api is None:
+            return (False, None)
+        else:
+            if not (self.idoit_cat_api.is_dialog_plus_field(idoit_name)):
+                titles = []
+                for dialog_ele in my_dialog_api.get_all():
+                    titles.append(dialog_ele['title'])
+                self.fail_json(msg='Wrong value %s for field %s You can only use [ %s ] ' %
+                               (self.params[ansible_name], ansible_name, ", ".join(titles)))
+            else:
+                ret = my_dialog_api.create(
+                    self.params[ansible_name], dialog_parent_id)
+                return (True, ret)
+
+    def present(self,  old_idoit_data, merge_mode):
         result = dict(
             changed=False
         )
@@ -147,56 +197,28 @@ class IdoitCategoryModule(AnsibleModule):
             ansible_name = idoit_name
             if 'ansible_name' in field.keys():
                 ansible_name = field['ansible_name']
-            if field['type'] == 'str':
+            if ((not merge_mode) and
+                (self.params[ansible_name] is None)):
+                if ('default' in field.keys()):
+                    self.params[ansible_name] = field['default']
+                else:
+                    self.params[ansible_name] = ""
+            if ((field['type'] in ['dialog', 'str']) and
+                (self.params[ansible_name] is not None) and
+                    ('\n' in self.params[ansible_name])):
+                self.fail_json(msg='Linefeed is not allowed in %s field (value="%s")' %
+                                   (ansible_name, self.params[ansible_name]))
+            if field['type'] in ['html', 'str', 'float', 'int']:
                 new_data[ansible_name] = self.params[ansible_name]
                 idoit_new_data[idoit_name] = new_data[ansible_name]
             elif field['type'] == 'dialog':
                 ansible_id_name = '%s_id' % (ansible_name)
-                my_dialog_api = None
-                my_dialog_id = None
-                if self.params[ansible_name] is not None and self.params[ansible_id_name] is not None:
-                    self.fail_json(msg='You can only specify %s or %s' %
-                                   (ansible_name, ansible_id_name))
-                if self.params[ansible_id_name] is not None:
-                    new_data[ansible_id_name] = self.params[ansible_id_name]
-                if self.params[ansible_name] is not None:
-                    my_dialog_api = idoit_api.createApiDialogs(
-                        self.cfg, self.idoit_spec['category'], idoit_name)
-                    if my_dialog_api is None:
-                        raise Exception(
-                            'Dialog API for type %s is None' % idoit_name)
-                dialog_parent_id = None
-                if 'dialog_parent' in field:
-                    dialog_parent_field_name = '%s_id' % field['dialog_parent']
-                    dialog_parent_id = new_data[dialog_parent_field_name]
-                    if dialog_parent_id is None:
-                        my_msg = 'You need to specify a %s or %s if you want to set %s' % (
-                            field['dialog_parent'], dialog_parent_field_name, ansible_name)
-                        self.fail_json(msg=my_msg, **result)
-                if my_dialog_api is None:
-                    my_dialog_id = None
-                else:
-                    my_dialog_id = my_dialog_api.get(
-                        self.params[ansible_name], dialog_parent_id)
-                if my_dialog_id is not None:
-                    new_data[ansible_id_name] = my_dialog_id
-                    idoit_new_data[idoit_name] = my_dialog_id
-                elif self.check_mode:
+                (change, dialog_val) = self.dialog_field(
+                    field, ansible_name, idoit_name, new_data)
+                if change:
                     result['changed'] = True
-                    new_data[ansible_id_name] = -42
-                elif my_dialog_api is None:
-                    new_data[ansible_id_name] = None
-                    idoit_new_data[idoit_name] = None
-                else:
-                    new_data[ansible_id_name] = my_dialog_api.create(
-                        self.params[ansible_name], dialog_parent_id)
-                    idoit_new_data[idoit_name] = new_data[ansible_id_name]
-            elif field['type'] == 'float':
-                new_data[ansible_name] = self.params[ansible_name]
-                idoit_new_data[idoit_name] = new_data[ansible_name]
-            elif field['type'] == 'int':
-                new_data[ansible_name] = self.params[ansible_name]
-                idoit_new_data[idoit_name] = new_data[ansible_name]
+                new_data[ansible_id_name] = dialog_val
+                idoit_new_data[idoit_name] = dialog_val
             elif field['type'] == 'bool':
                 new_data[ansible_name] = self.params[ansible_name]
                 if new_data[ansible_name]:
@@ -204,23 +226,32 @@ class IdoitCategoryModule(AnsibleModule):
                 else:
                     idoit_new_data[idoit_name] = 0
             else:
-                raise Exception('Unknown Type')
+                raise Exception('Unknown Type %s' % field['type'])
         result['data'] = new_data
         sanitized_before = {}
         sanitized_after = {}
+        for key in old_data.keys():
+            if key not in new_data.keys():
+                if merge_mode:
+                    new_data[key] = old_data[key]
+                else:
+                    result['changed'] = True
+                    sanitized_before[key] = old_data[key]
+            elif new_data[key] is None and merge_mode:
+                new_data[key] = old_data[key]
         for key in new_data.keys():
             if key not in old_data.keys():
                 result['changed'] = True
                 sanitized_after[key] = new_data[key]
             elif self.ansible_fields[key]['type'] == 'float':
-                changed_float=False
+                changed_float = False
                 if new_data[key] is None and old_data[key] is not None:
-                    changed_float=True
+                    changed_float = True
                 if new_data[key] is not None and old_data[key] is None:
-                    changed_float=True
+                    changed_float = True
                 if new_data[key] is not None and old_data[key] is not None:
                     if not (isclose(new_data[key], old_data[key], rel_tol=1e-3)):
-                        changed_float=True
+                        changed_float = True
                 if changed_float:
                     result['changed'] = True
                     sanitized_before[key] = old_data[key]
@@ -229,10 +260,6 @@ class IdoitCategoryModule(AnsibleModule):
                 result['changed'] = True
                 sanitized_before[key] = old_data[key]
                 sanitized_after[key] = new_data[key]
-        for key in old_data.keys():
-            if key not in new_data:
-                result['changed'] = True
-                sanitized_before[key] = old_data[key]
         if result['changed']:
             if self.check_mode:
                 r = 'Not modified, check_mode=True'
@@ -269,17 +296,13 @@ class IdoitCategoryInfoModule(AnsibleModule):
             ansible_name = idoit_name
             if 'ansible_name' in field.keys():
                 ansible_name = field['ansible_name']
-            if field['type'] == 'str':
-                ans_data[ansible_name] = idoit_data[idoit_name]
-            elif field['type'] == 'float':
-                ans_data[ansible_name] = idoit_data[idoit_name]
-            elif field['type'] == 'int':
+            if field['type'] in ['str', 'float', 'int', 'bool', 'html']:
                 ans_data[ansible_name] = idoit_data[idoit_name]
             elif field['type'] == 'dialog':
                 ansible_id_name = '%s_id' % (ansible_name)
                 ans_data[ansible_id_name] = idoit_data[idoit_name]
             else:
-                raise Exception('Unknown Type')
+                raise Exception('Unknown Type %s' % field['type'])
         if not self.idoit_spec['single_value_cat']:
             ans_data['id'] = idoit_data['id']
         return ans_data
