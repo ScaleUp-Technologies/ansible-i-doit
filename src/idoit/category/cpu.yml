@@ -24,11 +24,11 @@ fields:
     type: int
     description: Number of CPU cores
   description:
-    type: str
+    type: html
     description: Description of the CPU
 doc_examples:
   - name: Set a new CPU
-    scaleuptechnologies.idoit.idoit_cat_model:
+    scaleuptechnologies.idoit.idoit_cat_cpu:
       idoit: "{{ idoit_access }}"
       obj_id: 1320
       id: 2

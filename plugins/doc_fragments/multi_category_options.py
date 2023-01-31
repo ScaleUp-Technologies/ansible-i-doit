@@ -14,5 +14,9 @@ options:
     description: i-doit category id to update
   search_by_fields:
     type: list
-    description: field names to compare to find a category to update. Please note, Dialog-Fields can only searched by id.
+    description: field names to compare to find a category to update. Please note, Dialog-Fields can only searched by id
+  state:
+    choices: ['present', 'absent', 'merge']
+    decription: State of the category
+    default: present
 """

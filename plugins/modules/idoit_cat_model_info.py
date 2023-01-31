@@ -46,7 +46,7 @@ category: C__CATG__MODEL
 fields:
   description:
     description: Description of the Model
-    type: str
+    type: html
   firmware:
     description: Firmware
     type: str

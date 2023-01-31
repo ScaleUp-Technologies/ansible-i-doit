@@ -31,7 +31,7 @@ fields:
     type: str
     description: British thermal unit
   description:
-    type: str
+    type: html
     description: Description of the Power Consumer
 doc_examples:
   - name: Set a new Memory Module

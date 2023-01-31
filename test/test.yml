@@ -112,6 +112,83 @@
       tags:
         - net_interface
 
+    - name: Set a new Controller
+      scaleuptechnologies.idoit.idoit_cat_controller:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 4005
+        search_by_fields:
+          - title
+        title: "1: PERC H710 Mini (Embedded)"
+        firmware: "21.3.4-0001"
+        manufacturer: Dell
+        model: PERC H710
+      tags:
+        - controller
+    - name: Set a new Controller
+      scaleuptechnologies.idoit.idoit_cat_controller_info:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 4005
+      tags:
+        - controller
+    - name: Set a new Disk
+      scaleuptechnologies.idoit.idoit_cat_storage_device:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 4005
+        type: "Hard disk"
+        title: Slot 1,2
+        search_by_fields:
+          - title
+        firmware: "21.3.4-0001"
+        manufacturer: Samsung
+        model: SM2300
+        capacity: 250
+        unit: GB
+      tags:
+        - disk
+    - name: Set a new Idrac
+      scaleuptechnologies.idoit.idoit_cat_access:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 4005
+        search_by_fields:
+          - title
+        title: "iDRAC"
+        type: "BMC"
+        url: "https://172.18.0.39"
+        primary: False
+      tags:
+        - access
+    - name: Get Access Info
+      scaleuptechnologies.idoit.idoit_cat_access_info:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 4005
+      tags:
+        - access
+    - name: Get IP Addresses
+      scaleuptechnologies.idoit.idoit_cat_ip_info:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 4005
+      tags:
+        - ip
+
+    - name: Set IP Addresses
+      scaleuptechnologies.idoit.idoit_cat_ip:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 4005
+        search_by_fields:
+          - ipv4_address
+        net_type_id: 1 # Ipv4
+        ipv4_assignment_id: 2 # static
+        active: true
+        primary: false
+        ipv4_address: "{{ item }}"
+        state: merge
+      with_items:
+        - 10.42.170.10
+        - 10.42.170.70
+      tags:
+        - ip
+
+
   vars:
     idoit_access_test:
       api_key: "{{ lookup('ansible.builtin.env', 'IDOIT_KEY') }}"

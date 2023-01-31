@@ -49,7 +49,7 @@ fields:
     type: float
   description:
     description: Description of the Memory Module
-    type: str
+    type: html
   manufacturer:
     description: Name of Manufactuerer of the device, if not there it will
       be created

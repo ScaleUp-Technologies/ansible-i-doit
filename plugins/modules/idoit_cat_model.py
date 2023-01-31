@@ -15,6 +15,7 @@ description: Adds C__CATG__MODEL category to an object if not there or update
 extends_documentation_fragment:
 - scaleuptechnologies.idoit.idoit_option
 - scaleuptechnologies.idoit.category_options
+- scaleuptechnologies.idoit.single_category_options
 module: idoit_cat_model
 options:
   description:
@@ -88,7 +89,7 @@ category: C__CATG__MODEL
 fields:
   description:
     description: Description of the Model
-    type: str
+    type: html
   firmware:
     description: Firmware
     type: str

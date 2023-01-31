@@ -28,7 +28,7 @@ def render_cat(base_spec, template):
             idoit_doc_options[ansible_name]['type'] = 'bool'
         elif field['type'] == 'int':
             idoit_doc_options[ansible_name]['type'] = 'int'
-        elif field['type'] != 'str':
+        elif field['type'] not in ['str', 'html']:
             raise Exception('Unsupported type %s in %s.yml' %
                             (field['type'], base_spec['basename']))
 
@@ -48,7 +48,10 @@ def render_cat(base_spec, template):
             'scaleuptechnologies.idoit.idoit_option',
             'scaleuptechnologies.idoit.category_options']
     }
-    if not base_spec['single_value_cat']:
+    if base_spec['single_value_cat']:
+        idoit_doc['extends_documentation_fragment'].append(
+            'scaleuptechnologies.idoit.single_category_options')
+    else:
         idoit_doc['extends_documentation_fragment'].append(
             'scaleuptechnologies.idoit.multi_category_options')
 

@@ -7,7 +7,7 @@ class IDoitDialog(IDoitApiBase):
         self.property = property
         self.cache = {}
 
-    def get(self, value: str, parent: int = None):
+    def get_all(self):
         if self.cache == {}:
             params = {
                 'category': self.obj_type,
@@ -17,12 +17,26 @@ class IDoitDialog(IDoitApiBase):
             self.cache = r
         else:
             r = self.cache
-        for entry in r['result']:
+        return self.cache['result']
+
+    def get(self, value: str, parent: int = None):
+        for entry in self.get_all():
             if parent is None:
                 if value == entry['title']:
                     return int(entry['id'])
             else:
                 if (value == entry['title'] and
+                   entry['parent']['id'] == str(parent)):
+                    return int(entry['id'])
+        return None
+
+    def get_ignore_case(self, value: str, parent: int = None):
+        for entry in self.get_all():
+            if parent is None:
+                if value.lower() == entry['title'].lower():
+                    return int(entry['id'])
+            else:
+                if (value.lower() == entry['title'].lower() and
                    entry['parent']['id'] == str(parent)):
                     return int(entry['id'])
         return None

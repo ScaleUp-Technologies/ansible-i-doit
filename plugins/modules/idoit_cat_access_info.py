@@ -11,19 +11,19 @@ DOCUMENTATION = r'''
 author:
 - Scaleup Technologies
 - Sven Anders (@tabacha)
-description: Gets C__CATG__POWER_CONSUMER category  values
+description: Gets C__CATG__ACCESS category  values
 extends_documentation_fragment:
 - scaleuptechnologies.idoit.idoit_option
 - scaleuptechnologies.idoit.category_options
-module: idoit_cat_power_consumer_info
+module: idoit_cat_access_info
 options: {}
-short_description: Get values from a power_consumer category to an object
+short_description: Get values from a access category to an object
 
 '''
 
 EXAMPLES = r'''
 name: Search for a category for object 1320
-scaleuptechnologies.idoit.idoit_cat_power_consumer_info:
+scaleuptechnologies.idoit.idoit_cat_access_info:
   idoit: '{{ idoit_access }}'
   obj_id: 1320
 
@@ -42,40 +42,25 @@ data:
 '''
 
 IDOIT_SPEC = r'''
-category: C__CATG__POWER_CONSUMER
+category: C__CATG__ACCESS
 fields:
-  active:
-    default: false
-    description: Active
-    type: bool
-  ampere:
-    description: Ampere
-    type: float
-  btu:
-    description: British thermal unit
-    type: str
   description:
-    description: Description of the Power Consumer
+    description: Description of the Model
     type: html
-  manufacturer:
-    description: Name of Manufactuerer of the device, if not there it will
-      be created
-    description_id: Id of Manufactuerer of the device
-    type: dialog
-  model:
-    description: Model of the device, if not there it will be created
-    description_id: Id of Model of the device
-    dialog_parent: manufacturer
-    type: dialog
+  primary:
+    default: false
+    description: Is this the primary access
+    type: bool
   title:
     description: Title
     type: str
-  volt:
-    description: Voltage
-    type: float
-  watt:
-    description: Watt
-    type: float
+  type:
+    description: Type of the Access
+    description_id: Id of the type
+    type: dialog
+  url:
+    description: Url
+    type: str
 single_value_cat: false
 
 '''

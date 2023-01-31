@@ -11,19 +11,19 @@ DOCUMENTATION = r'''
 author:
 - Scaleup Technologies
 - Sven Anders (@tabacha)
-description: Gets C__CATG__POWER_CONSUMER category  values
+description: Gets C__CATG__STORAGE_DEVICE category  values
 extends_documentation_fragment:
 - scaleuptechnologies.idoit.idoit_option
 - scaleuptechnologies.idoit.category_options
-module: idoit_cat_power_consumer_info
+module: idoit_cat_storage_device_info
 options: {}
-short_description: Get values from a power_consumer category to an object
+short_description: Get values from a storage_device category to an object
 
 '''
 
 EXAMPLES = r'''
 name: Search for a category for object 1320
-scaleuptechnologies.idoit.idoit_cat_power_consumer_info:
+scaleuptechnologies.idoit.idoit_cat_storage_device_info:
   idoit: '{{ idoit_access }}'
   obj_id: 1320
 
@@ -42,21 +42,21 @@ data:
 '''
 
 IDOIT_SPEC = r'''
-category: C__CATG__POWER_CONSUMER
+category: C__CATG__STORAGE_DEVICE
 fields:
-  active:
-    default: false
-    description: Active
-    type: bool
-  ampere:
-    description: Ampere
+  capacity:
+    description: Capacity of the device
     type: float
-  btu:
-    description: British thermal unit
-    type: str
+  controller:
+    ansible_name: controller_id
+    description: Id of the controller
+    type: int
   description:
-    description: Description of the Power Consumer
-    type: html
+    description: Description
+    type: str
+  firmware:
+    description: Firmware
+    type: str
   manufacturer:
     description: Name of Manufactuerer of the device, if not there it will
       be created
@@ -67,15 +67,21 @@ fields:
     description_id: Id of Model of the device
     dialog_parent: manufacturer
     type: dialog
+  serial:
+    description: Serial number
+    type: str
   title:
     description: Title
-    type: str
-  volt:
-    description: Voltage
-    type: float
-  watt:
-    description: Watt
-    type: float
+    type: html
+  type:
+    description: Type of the Device like CD/DVD-ROM, Floppy Drive, Hard
+      Drive, SSD, ..
+    description_id: Id of the type
+    type: dialog
+  unit:
+    description: Memory unit of the capacity like B, KB, MB, TB, GB
+    description_id: Id of the memory unit
+    type: dialog
 single_value_cat: false
 
 '''

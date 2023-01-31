@@ -1,0 +1,59 @@
+category: C__CATG__STORAGE_DEVICE
+basename: storage_device
+single_value_cat: False
+fields:
+  title:
+    description: Title
+    type: html
+  manufacturer:
+    type: dialog
+    description: Name of Manufactuerer of the device, if not there it will be created
+    description_id: Id of Manufactuerer of the device
+  model:
+    type: dialog
+    dialog_parent: manufacturer
+    description: Model of the device, if not there it will be created
+    description_id: Id of Model of the device
+  type:
+    type: dialog
+    description: Type of the Device like CD/DVD-ROM, Floppy Drive, Hard Drive, SSD, ..
+    description_id: Id of the type
+  firmware:
+    type: str
+    description: Firmware
+  unit:
+    type: dialog
+    description: Memory unit of the capacity like B, KB, MB, TB, GB
+    description_id: Id of the memory unit
+  capacity:
+    type: float
+    description: Capacity of the device
+  serial:
+    type: str
+    description: Serial number
+  controller:
+    type: int
+    ansible_name: controller_id
+    description: Id of the controller
+  # hotspare dialog
+  # connected dialog_plus (EXTERN,INTERN,OTHER)
+  # lto_type dialog
+  # raid_group dialog
+  #fc_address:
+  #  type: str
+  #  description: FC Address
+  description:
+    type: str
+    description: Description
+doc_examples:
+  - name: Set a new Disk
+    scaleuptechnologies.idoit.idoit_cat_storage_device:
+      idoit: "{{ idoit_access }}"
+      obj_id: 1320
+      type: SSD
+      title: Slot 1,2
+      firmware: "21.3.4-0001"
+      manufacturer: Samsung
+      model: SM2300
+      capacity: 250
+      unit: GB

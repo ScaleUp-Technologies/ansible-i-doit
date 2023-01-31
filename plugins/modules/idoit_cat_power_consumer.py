@@ -106,7 +106,7 @@ fields:
     type: str
   description:
     description: Description of the Power Consumer
-    type: str
+    type: html
   manufacturer:
     description: Name of Manufactuerer of the device, if not there it will
       be created

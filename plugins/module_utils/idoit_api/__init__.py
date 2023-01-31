@@ -11,14 +11,19 @@ from .search import IDoitSearch
 from .memory import IDoitMemory
 from .cpu import IDoitCpu
 from .power_consumer import IDoitPowerConsumer
-
-
+from .storage_device import IDoitStorageDevice
+from .access import IDoitAccess
+from .cat_ip import IDoitIP
 
 def createApiCall(cfg, category):
+    if category == consts.C__CATG__ACCESS:
+        return IDoitAccess(cfg)
     if category == consts.C__CATG__CONNECTOR:
         return IDoitConnector(cfg)
     if category == consts.C__CATG__CUSTOM_FIELDS_RACKTABLES:
         return Racktables(cfg)
+    if category == consts.C__CATG__IP:
+        return IDoitIP(cfg)
     if category == consts.C__CATG__LOCATION:
         return IDoitLocation(cfg)
     if category == consts.C__CATG__MEMORY:
@@ -29,6 +34,8 @@ def createApiCall(cfg, category):
         return IDoitPowerConsumer(cfg)
     if category == consts.C__CATG__CPU:
         return IDoitCpu(cfg)
+    if category == consts.C__CATG__STORAGE_DEVICE:
+        return IDoitStorageDevice(cfg)
     if category.startswith('C__OBJTYPE__'):
         return IDoitObject(cfg, category)
     if category.startswith('C__CATS__') or category.startswith('C__CATG__'):
