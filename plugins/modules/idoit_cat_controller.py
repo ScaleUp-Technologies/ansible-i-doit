@@ -89,7 +89,7 @@ category: C__CATG__CONTROLLER
 fields:
   description:
     description: Description of the Model
-    type: html
+    type: str
   firmware:
     description: Firmware
     type: str
