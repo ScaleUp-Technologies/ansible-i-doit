@@ -188,6 +188,19 @@
       tags:
         - ip
 
+    - name: Search for a Network
+      scaleuptechnologies.idoit.idoit_condition_read:
+        idoit: "{{ idoit_access_test }}"
+        query:
+          - category: C__CATS__NET
+            field: address
+            value: 10.23.23.0
+          - category: C__CATS__NET
+            field: netmask
+            value: 255.255.255.0
+            operator: AND
+      tags:
+        - search_net
 
   vars:
     idoit_access_test:
