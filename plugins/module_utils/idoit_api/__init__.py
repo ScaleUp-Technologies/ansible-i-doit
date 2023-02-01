@@ -14,6 +14,7 @@ from .power_consumer import IDoitPowerConsumer
 from .storage_device import IDoitStorageDevice
 from .access import IDoitAccess
 from .cat_ip import IDoitIP
+from .conditional_read import IDoitConditionalRead
 
 def createApiCall(cfg, category):
     if category == consts.C__CATG__ACCESS:
@@ -61,3 +62,6 @@ def createApiDialogs(cfg, category, field):
 
 def search(cfg):
     return IDoitSearch(cfg, 'no_type')
+
+def conditional_read(cfg):
+    return IDoitConditionalRead(cfg, 'no_type')
