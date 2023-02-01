@@ -201,7 +201,7 @@ class IdoitCategoryModule(AnsibleModule):
                 (self.params[ansible_name] is None)):
                 if ('default' in field.keys()):
                     self.params[ansible_name] = field['default']
-                else:
+                elif (field['type'] in ['str', 'html']):
                     self.params[ansible_name] = ""
             if ((field['type'] in ['dialog', 'str']) and
                 (self.params[ansible_name] is not None) and
