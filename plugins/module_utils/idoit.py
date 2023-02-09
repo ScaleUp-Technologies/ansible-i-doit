@@ -7,7 +7,7 @@ from ansible.module_utils.basic import AnsibleModule
 # import ansible_collections.scaleuptechnologies.idoit.plugins.module_utils.utils as idoit_utils
 from . import utils as idoit_utils
 from pprint import pprint
-from . import idoit_api
+import idoit_scaleup
 import json
 from math import isclose
 
@@ -43,6 +43,8 @@ class IdoitCategoryModule(AnsibleModule):
                 arg_spec[ansible_name] = dict(type='int')
             elif field['type'] == 'bool':
                 arg_spec[ansible_name] = dict(type='bool')
+            elif field['type'] == 'list':
+                arg_spec[ansible_name] = dict(type='list',elements=field['element_type'])
             elif field['type'] == 'dialog':
                 arg_spec[ansible_name] = dict(type='str')
                 arg_spec[ansible_name+'_id'] = dict(type='int')
@@ -62,7 +64,7 @@ class IdoitCategoryModule(AnsibleModule):
     def run(self):
         # in cfg werden durch die Api noch Werte gecached, was bei Module.params nicht geht
         self.cfg = json.loads(json.dumps(self.params['idoit']))
-        self.idoit_cat_api = idoit_api.createApiCall(
+        self.idoit_cat_api = idoit_scaleup.createApiCall(
             self.cfg, self.idoit_spec['category'])
         if self.idoit_spec['single_value_cat']:
             old_idoit_data = self.idoit_cat_api.read_category(
@@ -145,7 +147,7 @@ class IdoitCategoryModule(AnsibleModule):
         if self.params[ansible_id_name] is not None:
             my_dialog_id = self.params[ansible_id_name]
         if self.params[ansible_name] is not None:
-            my_dialog_api = idoit_api.createApiDialogs(
+            my_dialog_api = idoit_scaleup.createApiDialogs(
                 self.cfg, self.idoit_spec['category'], idoit_name)
             if my_dialog_api is None:
                 raise Exception(
@@ -225,6 +227,9 @@ class IdoitCategoryModule(AnsibleModule):
                     idoit_new_data[idoit_name] = 1
                 else:
                     idoit_new_data[idoit_name] = 0
+            elif field['type'] == 'list':
+                new_data[ansible_name] = self.params[ansible_name]
+                idoit_new_data[idoit_name] = self.params[ansible_name]
             else:
                 raise Exception('Unknown Type %s' % field['type'])
         result['data'] = new_data
@@ -268,10 +273,17 @@ class IdoitCategoryModule(AnsibleModule):
                     idoit_new_data['id'] = self.params['id']
                     r = self.idoit_cat_api.update_category(
                         self.params['obj_id'], idoit_new_data)
+                    result['id'] = idoit_new_data['id']
                 else:
                     r = self.idoit_cat_api.save_category(
                         self.params['obj_id'], idoit_new_data)
+                    result['id'] = r['result']['entry']
             result['return'] = r
+        else:
+            if 'id' in old_idoit_data.keys():
+                result['id'] = old_idoit_data['id']
+            else:
+                result['no_id'] = old_idoit_data
         if self._diff:
             result["diff"] = {
                 "before": sanitized_before,
@@ -296,7 +308,7 @@ class IdoitCategoryInfoModule(AnsibleModule):
             ansible_name = idoit_name
             if 'ansible_name' in field.keys():
                 ansible_name = field['ansible_name']
-            if field['type'] in ['str', 'float', 'int', 'bool', 'html']:
+            if field['type'] in ['str', 'float', 'int', 'bool', 'html', 'list']:
                 ans_data[ansible_name] = idoit_data[idoit_name]
             elif field['type'] == 'dialog':
                 ansible_id_name = '%s_id' % (ansible_name)
@@ -309,7 +321,7 @@ class IdoitCategoryInfoModule(AnsibleModule):
 
     def run(self):
         self.cfg = json.loads(json.dumps(self.params['idoit']))
-        self.idoit_cat_api = idoit_api.createApiCall(
+        self.idoit_cat_api = idoit_scaleup.createApiCall(
             self.cfg, self.idoit_spec['category'])
         if self.idoit_spec['single_value_cat']:
             old_idoit_data = self.idoit_cat_api.read_category(

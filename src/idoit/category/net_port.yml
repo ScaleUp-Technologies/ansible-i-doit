@@ -1,0 +1,88 @@
+category: C__CATG__NETWORK_PORT
+basename: net_port
+single_value_cat: False
+fields:
+  title:
+    description: Title
+    type: str
+  description:
+    type: html
+    description: Description of the Model
+  interface:
+    type: int
+    ansible_name: interface_id
+    description: Id of the net_interface
+  port_type:
+    type: dialog
+    description: Type (Ethernet, FR, ISDN, ...)
+    description_id: Id of the Type
+  port_mode:
+    type: dialog
+    description: Mode (Standard, Stacking, Link Aggregation/Trunk)
+    description_id: Id of the Mode
+  plug_type:
+    type: dialog
+    description: Plug Type (RJ-45,RJ-11, LC, SC)
+    description_id: Id of the Plug Type
+  negotiation:
+    type: int
+    ansible_name: negotiation_id
+    description: Id of the negotiation (1=Automatic, 2=Manuell)
+    default: 1
+  duplex:
+    type: int
+    ansible_name: duplex_id
+    description: Id of the duplex (1=Half, 2=Full)
+    default: 2
+  speed:
+    type: float
+    description: Speed of the Interface
+  speed_type:
+    type: dialog
+    description: Unit of the Speed (bit/s,kbit/s,Mbit/s,Gbit/s)
+    description_id: Id of Speed Unit
+  standard:
+    type: dialog
+    description: Standard
+    description_id: Id of Strandard
+  mac:
+    type: str
+    description: MAC-address
+  mtu:
+    type: str
+    description: MTU (Maximum Transfer Unit)
+    default: "1500"
+  active:
+    type: bool
+    description: Active
+    default: true
+  addresses:
+    type: list
+    element_type: int
+    description: Ids of the Adress Object-id
+  cable:
+    type: int
+    ansible_name: cable_id
+    description: Id of the Cable
+  hba:
+    type: int
+    ansible_name: hba_id
+    description: Id of the HBA
+  default_vlan:
+    type: int
+    ansible_name: default_vlan_id
+    description: Standard VLAN
+  # FIXME
+  # layer2_assignment
+  # relation_direction
+doc_examples:
+ - name: Set Network Port
+   scaleuptechnologies.idoit.idoit_cat_net_port:
+      idoit: "{{ idoit_access_test }}"
+      obj_id: 4005
+      search_by_fields:
+        - title
+      title: eth0
+      mac: C8:1F:66:CA:29:51
+      plug_type: RJ-45
+      state: merge

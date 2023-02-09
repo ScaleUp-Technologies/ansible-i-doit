@@ -145,6 +145,7 @@
         unit: GB
       tags:
         - disk
+
     - name: Set a new Idrac
       scaleuptechnologies.idoit.idoit_cat_access:
         idoit: "{{ idoit_access_test }}"
@@ -154,15 +155,17 @@
         title: "iDRAC"
         type: "BMC"
         url: "https://172.18.0.39"
-        primary: False
+        primary: false
       tags:
         - access
+
     - name: Get Access Info
       scaleuptechnologies.idoit.idoit_cat_access_info:
         idoit: "{{ idoit_access_test }}"
         obj_id: 4005
       tags:
         - access
+
     - name: Get IP Addresses
       scaleuptechnologies.idoit.idoit_cat_ip_info:
         idoit: "{{ idoit_access_test }}"
@@ -202,6 +205,48 @@
       tags:
         - search_net
 
+    - name: Set Network Port
+      scaleuptechnologies.idoit.idoit_cat_net_port:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 4005
+        search_by_fields:
+          - title
+        title: eth0
+        mac: C8:1F:66:CA:29:51
+        plug_type: RJ-45
+        state: merge
+      tags:
+        - net_port
+
+    - name: Set Network Port
+      scaleuptechnologies.idoit.idoit_cat_net_port_info:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 4005
+      tags:
+        - net_port
+
+    - name: Set Network Port
+      scaleuptechnologies.idoit.idoit_cat_net_port:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 4005
+        search_by_fields:
+          - title
+        title: eth2
+        mac: 90:e2:ba:74:27:dc
+        plug_type: RJ-45
+        state: merge
+        addresses:
+          - 6
+          - 7
+      tags:
+        - net_port
+
+    - name: Set Network Port
+      scaleuptechnologies.idoit.idoit_cat_net_port_info:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 4005
+      tags:
+        - net_port
   vars:
     idoit_access_test:
       api_key: "{{ lookup('ansible.builtin.env', 'IDOIT_KEY') }}"

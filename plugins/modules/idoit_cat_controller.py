@@ -78,6 +78,9 @@ data:
     serial: Test 42
     service_tag: CZJ037040C
   type: complex
+id:
+  description: Category Id of the saved category
+  type: int
 return:
   description: I-Doit API Result
   type: complex

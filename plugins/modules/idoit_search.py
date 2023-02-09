@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, division, print_function)
-import ansible_collections.scaleuptechnologies.idoit.plugins.module_utils.idoit_api as idoit_api
+import idoit_scaleup
 import ansible_collections.scaleuptechnologies.idoit.plugins.module_utils.utils as idoit_utils
 from ansible.module_utils.basic import AnsibleModule
 __metaclass__ = type
@@ -65,7 +65,7 @@ def run_module():
         argument_spec=arg_spec,
         supports_check_mode=True,
     )
-    idoit_search = idoit_api.search(module.params['idoit'])
+    idoit_search = idoit_scaleup.search(module.params['idoit'])
     search_result = idoit_search.search(module.params['search'])
     result = {
         'changed': False,
