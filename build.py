@@ -28,6 +28,9 @@ def render_cat(base_spec, template):
             idoit_doc_options[ansible_name]['type'] = 'bool'
         elif field['type'] == 'int':
             idoit_doc_options[ansible_name]['type'] = 'int'
+        elif field['type'] == 'list':
+            idoit_doc_options[ansible_name]['type'] = 'list'
+            idoit_doc_options[ansible_name]['elements'] = field['element_type']
         elif field['type'] not in ['str', 'html']:
             raise Exception('Unsupported type %s in %s.yml' %
                             (field['type'], base_spec['basename']))
@@ -74,6 +77,10 @@ def render_cat(base_spec, template):
                 "serial": "Test 42",
                 "service_tag": "CZJ037040C"
             }
+        },
+        'id': {
+            'description': 'Category Id of the saved category',
+            'type': 'int'
         },
         'return': {
             'description': 'I-Doit API Result',
