@@ -30,4 +30,8 @@ options:
         type: str
         description: The Json RPC Url to i-doit.
         required: true
+      api_log:
+        type: bool
+        desciption: Return an api log of the i-doit api.
+        default: false
 """

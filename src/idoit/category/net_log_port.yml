@@ -1,0 +1,53 @@
+category: C__CATG__NETWORK_LOG_PORT
+basename: net_log_port
+single_value_cat: False
+fields:
+  title:
+    description: Title
+    type: str
+  description:
+    type: html
+    description: Description of the Model
+  ports:
+    type: int
+    ansible_name: port_ids
+    description: Id of the port
+  parent:
+    type: dialog
+    description: Parent
+    description_id: Id of the parent
+  port_type:
+    type: dialog
+    description: Type
+    description_id: Id of the port_type
+  standard:
+    type: dialog
+    description: Standard
+    description_id: Id of Strandard
+  mac:
+    type: str
+    description: MAC-address
+  active:
+    type: bool
+    description: Active
+    default: true
+  addresses:
+    type: list
+    element_type: int
+    description: Ids of the Adress Object-id
+  # FIXME
+  # net
+  # asigned_connector
+doc_examples:
+ - name: Set Network Logical Port
+   scaleuptechnologies.idoit.idoit_cat_net_log_port:
+      idoit: "{{ idoit_access_test }}"
+      obj_id: 4005
+      search_by_fields:
+        - title
+      title: bond0
+      mac: C8:1F:66:CA:29:51
+      ports:
+        - eth0
+        - eth1
+      state: merge

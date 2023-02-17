@@ -227,12 +227,12 @@
 
     - name: Set Network Port
       scaleuptechnologies.idoit.idoit_cat_net_port:
-        idoit: "{{ idoit_access_test }}"
+        idoit: "{{ idoit_access_test_log }}"
         obj_id: 4005
         search_by_fields:
           - title
         title: eth2
-        mac: 90:e2:ba:74:27:dc
+        mac: 90:E2:BA:74:27:DC
         plug_type: RJ-45
         state: merge
         addresses:
@@ -240,16 +240,18 @@
           - 7
       tags:
         - net_port
+        - net_port_addr
 
-    - name: Set Network Port
-      scaleuptechnologies.idoit.idoit_cat_net_port_info:
-        idoit: "{{ idoit_access_test }}"
-        obj_id: 4005
-      tags:
-        - net_port
+
   vars:
     idoit_access_test:
       api_key: "{{ lookup('ansible.builtin.env', 'IDOIT_KEY') }}"
       user: "{{ lookup('ansible.builtin.env', 'IDOIT_USER') }}"
       password: "{{ lookup('ansible.builtin.env', 'IDOIT_PASS') }}"
       jrpc_url: "{{ lookup('ansible.builtin.env', 'IDOIT_JURL') }}"
+    idoit_access_test_log:
+      api_key: "{{ lookup('ansible.builtin.env', 'IDOIT_KEY') }}"
+      user: "{{ lookup('ansible.builtin.env', 'IDOIT_USER') }}"
+      password: "{{ lookup('ansible.builtin.env', 'IDOIT_PASS') }}"
+      jrpc_url: "{{ lookup('ansible.builtin.env', 'IDOIT_JURL') }}"
+      api_log: true
