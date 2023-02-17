@@ -4,7 +4,6 @@ __metaclass__ = type
 
 
 from ansible.module_utils.basic import AnsibleModule
-# import ansible_collections.scaleuptechnologies.idoit.plugins.module_utils.utils as idoit_utils
 from . import utils as idoit_utils
 from pprint import pprint
 import idoit_scaleup
@@ -44,7 +43,8 @@ class IdoitCategoryModule(AnsibleModule):
             elif field['type'] == 'bool':
                 arg_spec[ansible_name] = dict(type='bool')
             elif field['type'] == 'list':
-                arg_spec[ansible_name] = dict(type='list',elements=field['element_type'])
+                arg_spec[ansible_name] = dict(
+                    type='list', elements=field['element_type'])
             elif field['type'] == 'dialog':
                 arg_spec[ansible_name] = dict(type='str')
                 arg_spec[ansible_name+'_id'] = dict(type='int')
@@ -64,6 +64,8 @@ class IdoitCategoryModule(AnsibleModule):
     def run(self):
         # in cfg werden durch die Api noch Werte gecached, was bei Module.params nicht geht
         self.cfg = json.loads(json.dumps(self.params['idoit']))
+        if self.cfg['api_log']:
+            idoit_scaleup.turn_on_api_logging()
         self.idoit_cat_api = idoit_scaleup.createApiCall(
             self.cfg, self.idoit_spec['category'])
         if self.idoit_spec['single_value_cat']:
@@ -122,6 +124,8 @@ class IdoitCategoryModule(AnsibleModule):
                     obj_id, old_idoit_data['id'])
             result['changed'] = True
             result['return'] = r
+        if self.cfg['api_log']:
+            result['api_log'] = idoit_scaleup.get_api_log()
         self.exit_json(**result)
 
     def conv_idoit_to_ansible(self, idoit_data):
@@ -200,7 +204,7 @@ class IdoitCategoryModule(AnsibleModule):
             if 'ansible_name' in field.keys():
                 ansible_name = field['ansible_name']
             if ((not merge_mode) and
-                (self.params[ansible_name] is None)):
+                    (self.params[ansible_name] is None)):
                 if ('default' in field.keys()):
                     self.params[ansible_name] = field['default']
                 elif (field['type'] in ['str', 'html']):
@@ -248,6 +252,25 @@ class IdoitCategoryModule(AnsibleModule):
             if key not in old_data.keys():
                 result['changed'] = True
                 sanitized_after[key] = new_data[key]
+            elif self.ansible_fields[key]['type'] == 'list':
+                changed_list = False
+                old_members = old_data[key]
+                new_members = new_data[key]
+                if old_members is None:
+                    old_members = []
+                if new_members is None:
+                    new_members = []
+                if len(old_members) != len(new_members):
+                    changed_list = True
+                else:
+                    for ele in old_members:
+                        if ele not in new_members:
+                            changed_list = True
+                            break
+                if changed_list:
+                    result['changed'] = True
+                    sanitized_before[key] = old_data[key]
+                    sanitized_after[key] = new_data[key]
             elif self.ansible_fields[key]['type'] == 'float':
                 changed_float = False
                 if new_data[key] is None and old_data[key] is not None:
@@ -277,7 +300,11 @@ class IdoitCategoryModule(AnsibleModule):
                 else:
                     r = self.idoit_cat_api.save_category(
                         self.params['obj_id'], idoit_new_data)
-                    result['id'] = r['result']['entry']
+                    if 'entry' in r['result']:
+                        result['id'] = r['result']['entry']
+                    else:
+                        self.fail_json(msg='Keine Id nach Save',
+                                       rtn=r['result'])
             result['return'] = r
         else:
             if 'id' in old_idoit_data.keys():
@@ -289,6 +316,8 @@ class IdoitCategoryModule(AnsibleModule):
                 "before": sanitized_before,
                 "after": sanitized_after,
             }
+        if self.cfg['api_log']:
+            result['api_log'] = idoit_scaleup.get_api_log()
         self.exit_json(**result)
 
 
@@ -321,6 +350,8 @@ class IdoitCategoryInfoModule(AnsibleModule):
 
     def run(self):
         self.cfg = json.loads(json.dumps(self.params['idoit']))
+        if self.cfg['api_log']:
+            idoit_scaleup.turn_on_api_logging()
         self.idoit_cat_api = idoit_scaleup.createApiCall(
             self.cfg, self.idoit_spec['category'])
         if self.idoit_spec['single_value_cat']:
@@ -335,4 +366,6 @@ class IdoitCategoryInfoModule(AnsibleModule):
             for old_idoit_data in old_idoit_data_arr:
                 data.append(self.convert_idoit_api_to_ansible(old_idoit_data))
             rtn = {'data': data}
+        if self.cfg['api_log']:
+            rtn['api_log'] = idoit_scaleup.get_api_log()
         self.exit_json(**rtn)
