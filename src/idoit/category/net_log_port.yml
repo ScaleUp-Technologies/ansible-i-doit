@@ -9,7 +9,8 @@ fields:
     type: html
     description: Description of the Model
   ports:
-    type: int
+    type: list
+    element_type: int
     ansible_name: port_ids
     description: Id of the port
   parent:
