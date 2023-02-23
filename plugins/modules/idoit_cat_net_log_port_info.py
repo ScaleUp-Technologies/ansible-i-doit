@@ -69,7 +69,8 @@ fields:
   ports:
     ansible_name: port_ids
     description: Id of the port
-    type: int
+    element_type: int
+    type: list
   standard:
     description: Standard
     description_id: Id of Strandard

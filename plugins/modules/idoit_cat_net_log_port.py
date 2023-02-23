@@ -39,7 +39,8 @@ options:
     type: int
   port_ids:
     description: Id of the port
-    type: int
+    elements: int
+    type: list
   port_type:
     description: Type
     type: str
@@ -128,7 +129,8 @@ fields:
   ports:
     ansible_name: port_ids
     description: Id of the port
-    type: int
+    element_type: int
+    type: list
   standard:
     description: Standard
     description_id: Id of Strandard

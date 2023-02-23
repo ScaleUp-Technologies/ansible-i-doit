@@ -242,6 +242,26 @@
         - net_port
         - net_port_addr
 
+    - name: Set Log Network Port
+      scaleuptechnologies.idoit.idoit_cat_net_log_port:
+        idoit: "{{ idoit_access_test_log }}"
+        obj_id: 4005
+        search_by_fields:
+          - title
+        addresses:
+          - 11
+        mac: "C8:1F:66:CA:29:52"
+        active: true
+        port_ids:
+          - 9188
+          - 7490
+        port_type: "Bond LACP"
+        state: "merge"
+        title: "bond0"
+      tags:
+        - net_log_port
+        - net_log_port_addr
+
 
   vars:
     idoit_access_test:

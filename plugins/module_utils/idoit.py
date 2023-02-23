@@ -300,11 +300,17 @@ class IdoitCategoryModule(AnsibleModule):
                 else:
                     r = self.idoit_cat_api.save_category(
                         self.params['obj_id'], idoit_new_data)
-                    if 'entry' in r['result']:
-                        result['id'] = r['result']['entry']
+                    if r is None:
+                        self.fail_json(msg='Keine Id nach Save r=None')
+                    if 'result' in r:
+                        if 'entry' in r['result']:
+                            result['id'] = r['result']['entry']
+                        else:
+                            self.fail_json(msg='Keine Id nach Save',
+                                       rtn=r['result'])
                     else:
                         self.fail_json(msg='Keine Id nach Save',
-                                       rtn=r['result'])
+                                       rtn=r)
             result['return'] = r
         else:
             if 'id' in old_idoit_data.keys():
