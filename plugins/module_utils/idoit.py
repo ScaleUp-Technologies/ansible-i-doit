@@ -301,12 +301,19 @@ class IdoitCategoryModule(AnsibleModule):
                     r = self.idoit_cat_api.save_category(
                         self.params['obj_id'], idoit_new_data)
                     if r is None:
-                        self.fail_json(msg='Keine Id nach Save r=None')
-                    if 'result' in r:
-                        if 'entry' in r['result']:
-                            result['id'] = r['result']['entry']
-                        else:
-                            self.fail_json(msg='Keine Id nach Save',
+                        api_log=idoit_scaleup.get_api_log()
+                        self.fail_json(msg='None RTN nach Cat Save',idn=idoit_new_data, api_log=api_log)
+                    if 'result' not in r:
+                        api_log=idoit_scaleup.get_api_log()
+                        self.fail_json(msg='No Reslt in r nach Cat Save',idn=idoit_new_data, rtn=r, api_log=api_log)
+                    if r['result'] is None:
+                        api_log=idoit_scaleup.get_api_log()
+                        self.fail_json(msg='None Reslt in r nach Cat Save',idn=idoit_new_data, rtn=r, api_log=api_log)
+
+                    if 'entry' in r['result']:
+                        result['id'] = r['result']['entry']
+                    else:
+                        self.fail_json(msg='Keine Id nach Save',
                                        rtn=r['result'])
                     else:
                         self.fail_json(msg='Keine Id nach Save',

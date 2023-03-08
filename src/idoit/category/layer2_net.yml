@@ -1,0 +1,42 @@
+category: C__CATS__LAYER2_NET
+basename: layer2_net
+single_value_cat: True
+fields:
+  vlan_id:
+    type: str
+    description: VLAN Id
+  standard:
+    type: bool
+    description: Standard VLAN
+  type:
+    type: dialog
+    description: Typ
+    description_id: Id of Typ
+  subtype:
+    type: dialog
+    description: Subtype
+    description_id: Id of Subtyp
+  vrf:
+    type: str
+    description: VRF
+  vrf_capacity:
+    type: int
+    description: VRF Capacity
+  vrf_capacity_unit:
+    type: dialog
+    description: Unit of the vrf_capacity (bit/s,kbit/s,Mbit/s,Gbit/s)
+    description_id: Id of vrf_capacity unit
+  # FIXME  Not implemented yet ...
+  # layer3_assignements
+  # ip_helper_addresses
+  description:
+    type: html
+    description: Description of the Layer2 Net
+doc_examples:
+  - name: Create a new VLAN
+    scaleuptechnologies.idoit.idoit_cat_layer2_net:
+      idoit: "{{ idoit_access }}"
+      obj_id: 1320
+      id: 2
+      vlan_id: 42
+      title: "Customer 70142 [42]"

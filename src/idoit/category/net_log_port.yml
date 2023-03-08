@@ -12,11 +12,10 @@ fields:
     type: list
     element_type: int
     ansible_name: port_ids
-    description: Id of the port
+    description: Id of the physical port
   parent:
-    type: dialog
+    type: int
     description: Parent
-    description_id: Id of the parent
   port_type:
     type: dialog
     description: Type
@@ -36,9 +35,13 @@ fields:
     type: list
     element_type: int
     description: Ids of the Adress Object-id
+  net:
+    type: list
+    element_type: int
+    ansible_name: layer2_net
+    description: Id of Layer2 Network (if VLAN)
   # FIXME
-  # net
-  # asigned_connector
+  # asigned_connector:
 doc_examples:
  - name: Set Network Logical Port
    scaleuptechnologies.idoit.idoit_cat_net_log_port:

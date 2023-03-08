@@ -28,14 +28,15 @@ options:
   description:
     description: Description of the Model
     type: str
+  layer2_net:
+    description: Id of Layer2 Network (if VLAN)
+    elements: int
+    type: list
   mac:
     description: MAC-address
     type: str
   parent:
     description: Parent
-    type: str
-  parent_id:
-    description: Id of the parent
     type: int
   port_ids:
     description: Id of the port
@@ -118,10 +119,14 @@ fields:
   mac:
     description: MAC-address
     type: str
+  net:
+    ansible_name: layer2_net
+    description: Id of Layer2 Network (if VLAN)
+    element_type: int
+    type: list
   parent:
     description: Parent
-    description_id: Id of the parent
-    type: dialog
+    type: int
   port_type:
     description: Type
     description_id: Id of the port_type

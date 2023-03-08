@@ -242,6 +242,12 @@
         - net_port
         - net_port_addr
 
+    - name: Set Network Port
+      scaleuptechnologies.idoit.idoit_cat_layer2_net_info:
+        idoit: "{{ idoit_access_test_log }}"
+        obj_id: 13719
+      tags:
+        - layer2_net
     - name: Set Log Network Port
       scaleuptechnologies.idoit.idoit_cat_net_log_port:
         idoit: "{{ idoit_access_test_log }}"
@@ -261,7 +267,6 @@
       tags:
         - net_log_port
         - net_log_port_addr
-
 
   vars:
     idoit_access_test:

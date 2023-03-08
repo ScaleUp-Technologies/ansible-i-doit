@@ -5,12 +5,12 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-class SingleDocFragment(object):
+class ModuleDocFragment(object):
 
     DOCUMENTATION = r"""
 options:
   state:
     choices: ['present', 'merge']
-    decription: State of the category
+    description: State of the category
     default: present
 """
