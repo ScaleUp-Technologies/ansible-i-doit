@@ -32,6 +32,6 @@ options:
         required: true
       api_log:
         type: bool
-        desciption: Return an api log of the i-doit api.
+        description: Return an api log of the i-doit api.
         default: false
 """

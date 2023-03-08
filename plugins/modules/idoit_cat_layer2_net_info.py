@@ -11,19 +11,19 @@ DOCUMENTATION = r'''
 author:
 - Scaleup Technologies
 - Sven Anders (@tabacha)
-description: Gets C__CATG__NETWORK_LOG_PORT category  values
+description: Gets C__CATS__LAYER2_NET category  values
 extends_documentation_fragment:
 - scaleuptechnologies.idoit.idoit_option
 - scaleuptechnologies.idoit.category_options
-module: idoit_cat_net_log_port_info
+module: idoit_cat_layer2_net_info
 options: {}
-short_description: Get values from a net_log_port category to an object
+short_description: Get values from a layer2_net category to an object
 
 '''
 
 EXAMPLES = r'''
 name: Search for a category for object 1320
-scaleuptechnologies.idoit.idoit_cat_net_log_port_info:
+scaleuptechnologies.idoit.idoit_cat_layer2_net_info:
   idoit: '{{ idoit_access }}'
   obj_id: 1320
 
@@ -42,47 +42,36 @@ data:
 '''
 
 IDOIT_SPEC = r'''
-category: C__CATG__NETWORK_LOG_PORT
+category: C__CATS__LAYER2_NET
 fields:
-  active:
-    default: true
-    description: Active
-    type: bool
-  addresses:
-    description: Ids of the Adress Object-id
-    element_type: int
-    type: list
   description:
-    description: Description of the Model
+    description: Description of the Layer2 Net
     type: html
-  mac:
-    description: MAC-address
-    type: str
-  net:
-    ansible_name: layer2_net
-    description: Id of Layer2 Network (if VLAN)
-    element_type: int
-    type: list
-  parent:
-    description: Parent
-    type: int
-  port_type:
-    description: Type
-    description_id: Id of the port_type
-    type: dialog
-  ports:
-    ansible_name: port_ids
-    description: Id of the port
-    element_type: int
-    type: list
   standard:
-    description: Standard
-    description_id: Id of Strandard
+    description: Standard VLAN
+    type: bool
+  subtype:
+    description: Subtype
+    description_id: Id of Subtyp
     type: dialog
-  title:
-    description: Title
+  type:
+    description: Typ
+    description_id: Id of Typ
+    type: dialog
+  vlan_id:
+    description: VLAN Id
     type: str
-single_value_cat: false
+  vrf:
+    description: VRF
+    type: str
+  vrf_capacity:
+    description: VRF Capacity
+    type: int
+  vrf_capacity_unit:
+    description: Unit of the vrf_capacity (bit/s,kbit/s,Mbit/s,Gbit/s)
+    description_id: Id of vrf_capacity unit
+    type: dialog
+single_value_cat: true
 
 '''
 
