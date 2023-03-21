@@ -72,7 +72,7 @@ fields:
     type: dialog
   ports:
     ansible_name: port_ids
-    description: Id of the port
+    description: Id of the physical port
     element_type: int
     type: list
   standard:

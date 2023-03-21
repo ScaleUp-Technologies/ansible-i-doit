@@ -268,6 +268,15 @@
         - net_log_port
         - net_log_port_addr
 
+    - name: Read Layer2 Nets
+      scaleuptechnologies.idoit.idoit_objects_read:
+        idoit: "{{ idoit_access_test_log }}"
+        filter_by_object_type: C__OBJTYPE__LAYER2_NET
+        categories:
+          - C__CATS__LAYER2_NET
+      tags:
+        - objects_read
+
   vars:
     idoit_access_test:
       api_key: "{{ lookup('ansible.builtin.env', 'IDOIT_KEY') }}"
