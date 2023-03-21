@@ -11,19 +11,19 @@ DOCUMENTATION = r'''
 author:
 - Scaleup Technologies
 - Sven Anders (@tabacha)
-description: Gets C__CATG__NETWORK_LOG_PORT category  values
+description: Gets C__CATG__GLOBAL category  values
 extends_documentation_fragment:
 - scaleuptechnologies.idoit.idoit_option
 - scaleuptechnologies.idoit.category_options
-module: idoit_cat_net_log_port_info
+module: idoit_cat_global_info
 options: {}
-short_description: Get values from a net_log_port category to an object
+short_description: Get values from a global category to an object
 
 '''
 
 EXAMPLES = r'''
 name: Search for a category for object 1320
-scaleuptechnologies.idoit.idoit_cat_net_log_port_info:
+scaleuptechnologies.idoit.idoit_cat_global_info:
   idoit: '{{ idoit_access }}'
   obj_id: 1320
 
@@ -42,47 +42,30 @@ data:
 '''
 
 IDOIT_SPEC = r'''
-category: C__CATG__NETWORK_LOG_PORT
+category: C__CATG__GLOBAL
 fields:
-  active:
-    default: true
-    description: Active
-    type: bool
-  addresses:
-    description: Ids of the Adress Object-id
-    element_type: int
-    type: list
+  category:
+    description: Category
+    description_id: Category of the Object
+    type: dialog
   description:
-    description: Description of the Model
+    description: Description
     type: html
-  mac:
-    description: MAC-address
+  purpose:
+    description: Purpose
+    description_id: Purpose of the Object
+    type: dialog
+  status:
+    description: Status
+    description_id: Id of Status
+    type: dialog
+  sysid:
+    description: SYS-ID
     type: str
-  net:
-    ansible_name: layer2_net
-    description: Id of Layer2 Network (if VLAN)
-    element_type: int
-    type: list
-  parent:
-    description: Parent
-    type: int
-  port_type:
-    description: Type
-    description_id: Id of the port_type
-    type: dialog
-  ports:
-    ansible_name: port_ids
-    description: Id of the physical port
-    element_type: int
-    type: list
-  standard:
-    description: Standard
-    description_id: Id of Strandard
-    type: dialog
   title:
     description: Title
     type: str
-single_value_cat: false
+single_value_cat: true
 
 '''
 

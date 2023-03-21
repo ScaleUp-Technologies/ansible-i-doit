@@ -2,52 +2,59 @@
   hosts: localhost
   gather_facts: false
   tasks:
+    - name: Set name
+      scaleuptechnologies.idoit.idoit_cat_global_info:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: "{{ my_obj_id }}"
+      register: global_info
+      tags:
+        - global
+
+    - name: Set name
+      scaleuptechnologies.idoit.idoit_cat_global:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: "{{ my_obj_id }}"
+        title: "ceph-mon01.os1.ham1.int.yco.de"
+        state: merge
+      tags:
+        - global
+
     - name: Search for Server with name
       scaleuptechnologies.idoit.idoit_search:
         idoit: "{{ idoit_access_test }}"
         search: "ceph004.occ1.ham1.int.yco.de"
+      tags:
+        - search
+
     - name: Get Model for Object 1320
       scaleuptechnologies.idoit.idoit_cat_model_info:
         idoit: "{{ idoit_access_test }}"
-        obj_id: 1320
+        obj_id: "{{ my_obj_id }}"
+      tags:
+        - model
+
     - name: Set a Model for a machine with serial
       scaleuptechnologies.idoit.idoit_cat_model:
         idoit: "{{ idoit_access_test }}"
-        obj_id: 1320
-        manufacturer: 'HP'
-        model: 'ProLiant DL160G6'
-        service_tag: CZJ037040C
-        serial: 'Test 42'
-    - name: Set a Model for a machine without serial
-      scaleuptechnologies.idoit.idoit_cat_model:
-        idoit: "{{ idoit_access_test }}"
-        obj_id: 1320
-        manufacturer: 'HP'
-        model: 'ProLiant DL160G6'
-        service_tag: CZJ037040C
+        obj_id: "{{ my_obj_id }}"
+        manufacturer: 'DELL'
+        model: 'PowerEdge R420'
+        service_tag: 5ZPT522
+      tags:
+        - model
+
     - name: Get Memory Info for server ceph-mon01.os1
       scaleuptechnologies.idoit.idoit_cat_memory_info:
         idoit: "{{ idoit_access_test }}"
-        obj_id: 4005
+        obj_id: "{{ my_obj_id }}"
       register: mem_info
       tags:
         - mem
-    - name: Set Memory for server ceph-mon01.os1 by id
-      scaleuptechnologies.idoit.idoit_cat_memory:
-        idoit: "{{ idoit_access_test }}"
-        obj_id: 4005
-        id: "{{ mem_info.data[0]['id'] }}"
-        manufacturer: 'Samsung'
-        title: 'SDRAM'
-        capacity: 8388608
-        unit: KB
-        description: '<p>DIMM.Socket.A1 M393B1G70BH0-YK0 131A13D9</p>'
-      tags:
-        - mem
+
     - name: Set Memory for server ceph-mon01.os1 by fields
       scaleuptechnologies.idoit.idoit_cat_memory:
         idoit: "{{ idoit_access_test }}"
-        obj_id: 4005
+        obj_id: "{{ my_obj_id }}"
         search_by_fields:
           - description
         manufacturer: 'Samsung'
@@ -57,10 +64,11 @@
         description: '<p>DIMM.Socket.A2 M393B1G70BH0-YK0 191B13X9</p>'
       tags:
         - mem
+
     - name: Set Memory for server ceph-mon01.os1 by fields
       scaleuptechnologies.idoit.idoit_cat_power_consumer:
         idoit: "{{ idoit_access_test }}"
-        obj_id: 4005
+        obj_id: "{{ my_obj_id }}"
         search_by_fields:
           - title
         title: 'PS Slot 1'
@@ -70,18 +78,21 @@
         ampere: "{{ 550/230 }}"
       tags:
         - power_consumer
+
     - name: Get CPU Info
       scaleuptechnologies.idoit.idoit_cat_cpu_info:
         idoit: "{{ idoit_access_test }}"
-        obj_id: 4005
+        obj_id: "{{ my_obj_id }}"
       register: cpu_info
       tags:
         - cpu
+
     - name: Set CPU Info
       scaleuptechnologies.idoit.idoit_cat_cpu:
         idoit: "{{ idoit_access_test }}"
-        obj_id: 4005
-        id: "{{ cpu_info.data[0]['id'] }}"
+        obj_id: "{{ my_obj_id }}"
+        search_by_fields:
+          - title
         title: "Slot 0: Intel(R) Xeon(R) CPU E5-2430 v2 @ 2.50GHz"
         frequency: 2.5
         frequency_unit: GHz
@@ -94,14 +105,14 @@
     - name: Set Network Interface
       scaleuptechnologies.idoit.idoit_cat_net_interface_info:
         idoit: "{{ idoit_access_test }}"
-        obj_id: 4005
+        obj_id: "{{ my_obj_id }}"
       tags:
         - net_interface
 
     - name: Set Network Interface
       scaleuptechnologies.idoit.idoit_cat_net_interface:
         idoit: "{{ idoit_access_test }}"
-        obj_id: 4005
+        obj_id: "{{ my_obj_id }}"
         search_by_fields:
           - title
         manufacturer: Broadcom Corp
@@ -115,7 +126,7 @@
     - name: Set a new Controller
       scaleuptechnologies.idoit.idoit_cat_controller:
         idoit: "{{ idoit_access_test }}"
-        obj_id: 4005
+        obj_id: "{{ my_obj_id }}"
         search_by_fields:
           - title
         title: "1: PERC H710 Mini (Embedded)"
@@ -127,13 +138,14 @@
     - name: Set a new Controller
       scaleuptechnologies.idoit.idoit_cat_controller_info:
         idoit: "{{ idoit_access_test }}"
-        obj_id: 4005
+        obj_id: "{{ my_obj_id }}"
       tags:
         - controller
+
     - name: Set a new Disk
       scaleuptechnologies.idoit.idoit_cat_storage_device:
         idoit: "{{ idoit_access_test }}"
-        obj_id: 4005
+        obj_id: "{{ my_obj_id }}"
         type: "Hard disk"
         title: Slot 1,2
         search_by_fields:
@@ -149,7 +161,7 @@
     - name: Set a new Idrac
       scaleuptechnologies.idoit.idoit_cat_access:
         idoit: "{{ idoit_access_test }}"
-        obj_id: 4005
+        obj_id: "{{ my_obj_id }}"
         search_by_fields:
           - title
         title: "iDRAC"
@@ -162,21 +174,21 @@
     - name: Get Access Info
       scaleuptechnologies.idoit.idoit_cat_access_info:
         idoit: "{{ idoit_access_test }}"
-        obj_id: 4005
+        obj_id: "{{ my_obj_id }}"
       tags:
         - access
 
     - name: Get IP Addresses
       scaleuptechnologies.idoit.idoit_cat_ip_info:
         idoit: "{{ idoit_access_test }}"
-        obj_id: 4005
+        obj_id: "{{ my_obj_id }}"
       tags:
         - ip
 
     - name: Set IP Addresses
       scaleuptechnologies.idoit.idoit_cat_ip:
         idoit: "{{ idoit_access_test }}"
-        obj_id: 4005
+        obj_id: "{{ my_obj_id }}"
         search_by_fields:
           - ipv4_address
         net_type_id: 1 # Ipv4
@@ -208,7 +220,7 @@
     - name: Set Network Port
       scaleuptechnologies.idoit.idoit_cat_net_port:
         idoit: "{{ idoit_access_test }}"
-        obj_id: 4005
+        obj_id: "{{ my_obj_id }}"
         search_by_fields:
           - title
         title: eth0
@@ -221,14 +233,14 @@
     - name: Set Network Port
       scaleuptechnologies.idoit.idoit_cat_net_port_info:
         idoit: "{{ idoit_access_test }}"
-        obj_id: 4005
+        obj_id: "{{ my_obj_id }}"
       tags:
         - net_port
 
     - name: Set Network Port
       scaleuptechnologies.idoit.idoit_cat_net_port:
         idoit: "{{ idoit_access_test_log }}"
-        obj_id: 4005
+        obj_id: "{{ my_obj_id }}"
         search_by_fields:
           - title
         title: eth2
@@ -242,16 +254,17 @@
         - net_port
         - net_port_addr
 
-    - name: Set Network Port
+    - name: Search Layer2 Net
       scaleuptechnologies.idoit.idoit_cat_layer2_net_info:
         idoit: "{{ idoit_access_test_log }}"
-        obj_id: 13719
+        obj_id: "{{ my_obj_id }}"
       tags:
         - layer2_net
+
     - name: Set Log Network Port
       scaleuptechnologies.idoit.idoit_cat_net_log_port:
         idoit: "{{ idoit_access_test_log }}"
-        obj_id: 4005
+        obj_id: {{ my_obj_id }}
         search_by_fields:
           - title
         addresses:
@@ -280,3 +293,4 @@
       password: "{{ lookup('ansible.builtin.env', 'IDOIT_PASS') }}"
       jrpc_url: "{{ lookup('ansible.builtin.env', 'IDOIT_JURL') }}"
       api_log: true
+    my_obj_id: 4033

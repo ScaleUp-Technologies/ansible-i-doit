@@ -1,0 +1,33 @@
+category: C__CATG__GLOBAL
+basename: global
+single_value_cat: True
+fields:
+  title:
+    type: str
+    description: Title
+  sysid:
+    type: str
+    description: SYS-ID
+  status:
+    type: dialog
+    description: Status
+    description_id: Id of Status
+  purpose:
+    type: dialog
+    description: Purpose
+    description_id: Purpose of the Object
+  category:
+    type: dialog
+    description: Category
+    description_id: Category of the Object
+  description:
+    type: html
+    description: Description
+doc_examples:
+  - name: Set a new Name
+    scaleuptechnologies.idoit.idoit_cat_global:
+      idoit: "{{ idoit_access }}"
+      obj_id: 1320
+      title: my_machine.int.yco.de
+      state: merge
+# TODO: tag cmdb_status
