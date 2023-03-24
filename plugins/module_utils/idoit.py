@@ -315,9 +315,6 @@ class IdoitCategoryModule(AnsibleModule):
                     else:
                         self.fail_json(msg='Keine Id nach Save',
                                        rtn=r['result'])
-                    else:
-                        self.fail_json(msg='Keine Id nach Save',
-                                       rtn=r)
             result['return'] = r
         else:
             if 'id' in old_idoit_data.keys():
@@ -345,11 +342,15 @@ class IdoitCategoryInfoModule(AnsibleModule):
 
     def convert_idoit_api_to_ansible(self, idoit_data):
         ans_data = {}
+        if idoit_data == None:
+            return None
         for idoit_name in self.idoit_spec['fields'].keys():
             field = self.idoit_spec['fields'][idoit_name]
             ansible_name = idoit_name
             if 'ansible_name' in field.keys():
                 ansible_name = field['ansible_name']
+            if not 'type' in field.keys():
+                raise Exception('Type not defined %s' % json.dumps(field))
             if field['type'] in ['str', 'float', 'int', 'bool', 'html', 'list']:
                 ans_data[ansible_name] = idoit_data[idoit_name]
             elif field['type'] == 'dialog':

@@ -289,7 +289,13 @@
           - C__CATS__LAYER2_NET
       tags:
         - objects_read
-
+    - name: Create Layer2 Net
+      scaleuptechnologies.idoit.idoit_object:
+        idoit: "{{ idoit_access_test_log }}"
+        type: C__OBJTYPE__LAYER2_NET
+        title: "Mein VLAN 2"
+      tags:
+        - object_create
   vars:
     idoit_access_test:
       api_key: "{{ lookup('ansible.builtin.env', 'IDOIT_KEY') }}"
