@@ -26,7 +26,7 @@ author:
 extends_documentation_fragment:
     - scaleuptechnologies.idoit.idoit_option
 '''
-XAMPLES = r'''
+EXAMPLES = r'''
 - name: Search for all Layer2 Nets with VLAN info
   scaleuptechnologies.idoit.idoit_object:
     idoit: "{{ idoit_access_test }}"
