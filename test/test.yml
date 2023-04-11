@@ -264,7 +264,7 @@
     - name: Set Log Network Port
       scaleuptechnologies.idoit.idoit_cat_net_log_port:
         idoit: "{{ idoit_access_test_log }}"
-        obj_id: {{ my_obj_id }}
+        obj_id: "{{ my_obj_id }}"
         search_by_fields:
           - title
         addresses:
@@ -289,6 +289,7 @@
           - C__CATS__LAYER2_NET
       tags:
         - objects_read
+
     - name: Create Layer2 Net
       scaleuptechnologies.idoit.idoit_object:
         idoit: "{{ idoit_access_test_log }}"
@@ -296,6 +297,36 @@
         title: "Mein VLAN 2"
       tags:
         - object_create
+
+    - name: Set a new Power Port
+      scaleuptechnologies.idoit.idoit_cat_connector:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 1567
+        title: "POWER IN"
+        search_by_fields:
+          - title
+        in_or_output: 1
+        connection_type: Schuko
+      register: conn_in
+      tags:
+        - connector
+
+    - name: Set output Power Port
+      scaleuptechnologies.idoit.idoit_cat_connector:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 1567
+        title: "{{ item }}"
+        in_or_output: 2
+        search_by_fields:
+          - title
+        connection_type: Schuko
+        connector_sibling: "{{ conn_in.id }}"
+      loop:
+        - OUT 01
+        - OUT 02
+      tags:
+        - connector
+
   vars:
     idoit_access_test:
       api_key: "{{ lookup('ansible.builtin.env', 'IDOIT_KEY') }}"

@@ -1,0 +1,33 @@
+category: C__CATG__CONNECTOR
+basename: connector
+single_value_cat: False
+fields:
+  title:
+    description: Title
+    type: str
+  type:
+    type: int
+    ansible_name: in_or_output
+    description:  input (1) or output (2)
+  connection_type:
+    type: dialog
+    description: Schuko, ...
+    description_id: Id of connection_type
+  interface:
+    type: dialog
+    description: Speed of the interface
+    description_id: Id of Interface
+  description:
+    type: html
+    description: Description of the Model
+  connector_sibling:
+    type: int
+    description: Assinged Input or Output id
+doc_examples:
+  - name: Set a new Power Port
+    scaleuptechnologies.idoit.idoit_cat_connector:
+      idoit: "{{ idoit_access }}"
+      obj_id: 1320
+      title: "01"
+      in_or_output: 1
+      connection_type: Schuko
