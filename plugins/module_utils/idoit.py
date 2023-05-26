@@ -243,11 +243,15 @@ class IdoitCategoryModule(AnsibleModule):
             if key not in new_data.keys():
                 if merge_mode:
                     new_data[key] = old_data[key]
+                    if old_data[key] is not None:
+                        idoit_new_data[key] = old_data[key]
                 else:
                     result['changed'] = True
                     sanitized_before[key] = old_data[key]
             elif new_data[key] is None and merge_mode:
                 new_data[key] = old_data[key]
+                if old_data[key] is not None:
+                    idoit_new_data[key] = old_data[key]
         for key in new_data.keys():
             if key not in old_data.keys():
                 result['changed'] = True
