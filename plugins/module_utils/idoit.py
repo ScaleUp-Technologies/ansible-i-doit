@@ -251,7 +251,22 @@ class IdoitCategoryModule(AnsibleModule):
             elif new_data[key] is None and merge_mode:
                 new_data[key] = old_data[key]
                 if old_data[key] is not None:
-                    idoit_new_data[key] = old_data[key]
+                    # Je nach Typ bearbeiten, bei dialog z.B. muss das _id wieder weg
+                    if key in self.idoit_spec['fields'].keys():
+                        type=self.idoit_spec['fields'][key]['type']
+                        if type in ['html', 'str', 'float', 'int']:
+                            idoit_new_data[key] = old_data[key]
+                        elif type == 'bool':
+                            if old_data[key]:
+                                idoit_new_data[key] = 1
+                            else:
+                                idoit_new_data[key] = 0
+                        else:
+                            raise Exception('Unknown old data type %s in merge mode %s = %s' % (type, key, old_data[key]))
+                    elif ((key.endswith('_id')) and
+                         (key[:-3] in self.idoit_spec['fields'].keys()) and
+                         (self.idoit_spec['fields'][key[:-3]]=='dialog')):
+                        idoit_new_data[key[:-3]]=old_data[key]
         for key in new_data.keys():
             if key not in old_data.keys():
                 result['changed'] = True
