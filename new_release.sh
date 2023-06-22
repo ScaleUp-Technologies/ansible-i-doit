@@ -27,5 +27,5 @@ echo git push origin v${VERSION}
 
 MYTMP=$(mktemp -d)
 ansible-galaxy collection build --output-path ${MYTMP}
-ansible-galaxy collection publish --token ${GALAXY_TOKEN} ${MYTMP}/*.tar.gz
+ansible-galaxy collection publish --timeout 200 --token ${GALAXY_TOKEN} ${MYTMP}/*.tar.gz
 rm -rf ${MYTMP}
