@@ -17,7 +17,8 @@ options:
         description: what to query for
         type: list
         required: true
-        elements:
+        elements: dict
+        suboptions:
             category:
                 type: str
                 description: The category to search in
