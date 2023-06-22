@@ -254,7 +254,7 @@ class IdoitCategoryModule(AnsibleModule):
                     # Je nach Typ bearbeiten, bei dialog z.B. muss das _id wieder weg
                     if key in self.idoit_spec['fields'].keys():
                         type=self.idoit_spec['fields'][key]['type']
-                        if type in ['html', 'str', 'float', 'int']:
+                        if type in ['html', 'str', 'float', 'int', 'list']:
                             idoit_new_data[key] = old_data[key]
                         elif type == 'bool':
                             if old_data[key]:
