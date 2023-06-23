@@ -74,8 +74,13 @@ def run_module():
     }
     for ele in search_result:
         add = False
-        if ((module.params['only_exact_match'] is False) or
-           (ele['value'] == module.params['search'])):
+        if module.params['only_exact_match'] is False:
+            # value wird bei manchen Felder der Titel des Objekts mit ": " vorgefuegt
+            val = ele['value']
+            if ": " in val:
+                val = ": ".join(val.split(': ')[1:])
+            add = (val == module.params['search'])
+        else:
             add = True
         if (module.params['only_key'] is not None) and ele['key'] != module.params['only_key']:
             add = False
