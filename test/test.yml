@@ -327,6 +327,25 @@
       tags:
         - connector
 
+    - name: Get Virtual machine setting
+      scaleuptechnologies.idoit.idoit_cat_virtual_machine_info:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 16783
+      tags:
+        - virtual_machine
+
+    - name: Set Virtual machine setting
+      scaleuptechnologies.idoit.idoit_cat_virtual_machine:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 16783
+        is_virtual: 2
+        system_id: 13 # OpenStack
+        hosts: 3123
+        config_file: HalloDu.yml
+      tags:
+        - virtual_machine
+
+
   vars:
     idoit_access_test:
       api_key: "{{ lookup('ansible.builtin.env', 'IDOIT_KEY') }}"
