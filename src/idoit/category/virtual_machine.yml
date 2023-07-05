@@ -1,0 +1,33 @@
+category: C__CATG__VIRTUAL_MACHINE
+basename: virtual_machine
+single_value_cat: False
+fields:
+  virtual_machine:
+    type: int
+    ansible_name: is_virtual
+    description: Is virtual? (2=Virtual, 3=Not Virtual)
+  hosts:
+    type: int
+    description: Id of Host of the Virtual Machine
+  system:
+    type: dialog
+    description: Type of virtualization, Vmware, Hyper-V, OpenStack ...
+    description_id: Id of type of virtualization, Vmware, Hyper-V, OpenStack ...
+  config_file:
+    type: str
+    description: Config File
+  #  primary:
+  #    type: str
+  #    description: Primary Management Node
+  description:
+    type: html
+    description: Description
+doc_examples:
+  - name: Set Virtual machine setting
+    scaleuptechnologies.idoit.idoit_cat_virtual_machine:
+      idoit: "{{ idoit_access_test }}"
+      obj_id: 16783
+      is_virtual: 2
+      system_id: 13 # OpenStack
+      hosts: 3123
+      config_file: HalloDu.yml
