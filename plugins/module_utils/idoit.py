@@ -265,8 +265,9 @@ class IdoitCategoryModule(AnsibleModule):
                             raise Exception('Unknown old data type %s in merge mode %s = %s' % (type, key, old_data[key]))
                     elif ((key.endswith('_id')) and
                          (key[:-3] in self.idoit_spec['fields'].keys()) and
-                         (self.idoit_spec['fields'][key[:-3]]=='dialog')):
+                         (self.idoit_spec['fields'][key[:-3]]['type']=='dialog')):
                         idoit_new_data[key[:-3]]=old_data[key]
+
         for key in new_data.keys():
             if key not in old_data.keys():
                 result['changed'] = True
@@ -324,10 +325,10 @@ class IdoitCategoryModule(AnsibleModule):
                         self.fail_json(msg='None RTN nach Cat Save',idn=idoit_new_data, api_log=api_log)
                     if 'result' not in r:
                         api_log=idoit_scaleup.get_api_log()
-                        self.fail_json(msg='No Reslt in r nach Cat Save',idn=idoit_new_data, rtn=r, api_log=api_log)
+                        self.fail_json(msg='No Result in r nach Cat Save',idn=idoit_new_data, rtn=r, api_log=api_log)
                     if r['result'] is None:
                         api_log=idoit_scaleup.get_api_log()
-                        self.fail_json(msg='None Reslt in r nach Cat Save',idn=idoit_new_data, rtn=r, api_log=api_log)
+                        self.fail_json(msg='None Result in r nach Cat Save',idn=idoit_new_data, rtn=r, api_log=api_log)
 
                     if 'entry' in r['result']:
                         result['id'] = r['result']['entry']
