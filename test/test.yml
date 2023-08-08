@@ -261,25 +261,51 @@
       tags:
         - layer2_net
 
-    - name: Set Log Network Port
+    - name: Set Log Network Port Step 1
       scaleuptechnologies.idoit.idoit_cat_net_log_port:
         idoit: "{{ idoit_access_test_log }}"
         obj_id: "{{ my_obj_id }}"
         search_by_fields:
           - title
         addresses:
-          - 11
+          - 151
         mac: "C8:1F:66:CA:29:52"
         active: true
-        port_ids:
-          - 9188
-          - 7490
         port_type: "Bond LACP"
         state: "merge"
         title: "bond0"
       tags:
         - net_log_port
         - net_log_port_addr
+
+    - name: Set Log Network Port Step 2
+      scaleuptechnologies.idoit.idoit_cat_net_log_port:
+        idoit: "{{ idoit_access_test_log }}"
+        obj_id: "{{ my_obj_id }}"
+        search_by_fields:
+          - title
+        port_ids:
+          - 7345
+          - 7346
+        state: "merge"
+        title: "bond0"
+      tags:
+        - net_log_port
+        - net_log_port_addr
+
+    - name: Read Log Network Port
+      scaleuptechnologies.idoit.idoit_cat_net_log_port_info:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: "{{ my_obj_id }}"
+      register: result
+      failed_when: >
+        (result.data[0].addresses[0] != 151) or
+        (result.data[0].mac != 'C8:1F:66:CA:29:52') or
+        (result.data[0].title != 'bond0') or
+        ((result.data[0].port_ids | length ) != 2) or
+        ( 7345 not in result.data[0].port_ids)
+      tags:
+        - net_log_port
 
     - name: Read Layer2 Nets
       scaleuptechnologies.idoit.idoit_objects_read:
