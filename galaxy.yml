@@ -8,7 +8,7 @@ namespace: scaleuptechnologies
 name: idoit
 
 # The version of the collection. Must be compatible with semantic versioning
-version: 0.10.0
+version: 0.11.0
 
 # The path to the Markdown (.md) readme file. This path is relative to the root of the collection
 readme: README.md
@@ -16,8 +16,8 @@ readme: README.md
 # A list of the collection's content authors. Can be just the name or in the format 'Full Name <email> (url)
 # @nicks:irc/im.site#channel'
 authors:
-- Sven Anders <sven@anders-hamburg.de>
-
+  - Sven Anders <sven@anders-hamburg.de>
+  - Freerk-Ole Zakfeld <fzakfeld@scaleuptech.com>
 
 ### OPTIONAL but strongly recommended
 # A short summary description of the collection
@@ -26,11 +26,11 @@ description: ScaleupTechnologies i-doit
 # Either a single license or a list of licenses for content inside of a collection. Ansible Galaxy currently only
 # accepts L(SPDX,https://spdx.org/licenses/) licenses. This key is mutually exclusive with 'license_file'
 license:
-- MIT
+  - MIT
 
 # The path to the license file for the collection. This path is relative to the root of the collection. This key is
 # mutually exclusive with 'license'
-license_file: ''
+license_file: ""
 
 # A list of tags you want to associate with the collection for indexing/searching. A tag name has the same character
 # requirements as 'namespace' and 'name'
@@ -59,4 +59,3 @@ issues: https://github.com/ScaleUp-Technologies/ansible-i-doit/issues
 # uses 'fnmatch' to match the files or directories. Some directories and files like 'galaxy.yml', '*.pyc', '*.retry',
 # and '.git' are always filtered
 build_ignore: []
-
