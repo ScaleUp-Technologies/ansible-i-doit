@@ -1,0 +1,18 @@
+category: C__CATG__APPLICATION
+basename: application
+single_value_cat: False
+fields:
+  application:
+    description: Software Id
+    type: int
+  assigned_version:
+    type: dialog
+    description: Assigned Version
+    description_id: Assigned Version Id
+  installDate:
+    type: str
+    description: Installation Date
+  description:
+    type: html
+    description: Description of the Assingment
+doc_examples: []
