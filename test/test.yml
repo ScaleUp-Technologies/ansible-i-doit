@@ -371,6 +371,26 @@
       tags:
         - virtual_machine
 
+    - name: Get Operation system
+      scaleuptechnologies.idoit.idoit_cat_application_info:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: "{{ my_obj_id }}"
+      tags:
+        - software
+
+    - name: Set Operation system
+      scaleuptechnologies.idoit.idoit_cat_application:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: "{{ my_obj_id }}"
+        application: 17978 # Ubuntu
+        assigned_version: "18.04.2"
+        installDate: 2023-10-06
+        search_by_fields:
+          - application
+      tags:
+        - software
+
+
 
   vars:
     idoit_access_test:
