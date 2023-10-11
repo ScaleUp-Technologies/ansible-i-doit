@@ -21,6 +21,12 @@ options:
   application:
     description: Software Id
     type: int
+  application_priority:
+    description: Application Priority
+    type: str
+  application_priority_id:
+    description: Assigned Priority Id (1=Primary, 2=Secondary)
+    type: int
   assigned_version:
     description: Assigned Version
     type: str
@@ -73,9 +79,14 @@ fields:
   application:
     description: Software Id
     type: int
+  application_priority:
+    description: Application Priority
+    description_id: Assigned Priority Id (1=Primary, 2=Secondary)
+    type: dialog
   assigned_version:
     description: Assigned Version
     description_id: Assigned Version Id
+    dialog_parent: application
     type: dialog
   description:
     description: Description of the Assingment

@@ -5,10 +5,15 @@ fields:
   application:
     description: Software Id
     type: int
+  application_priority:
+    description: Application Priority
+    type: dialog
+    description_id: Assigned Priority Id (1=Primary, 2=Secondary)
   assigned_version:
     type: dialog
     description: Assigned Version
     description_id: Assigned Version Id
+    dialog_parent: application
   installDate:
     type: str
     description: Installation Date
