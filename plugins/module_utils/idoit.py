@@ -159,6 +159,8 @@ class IdoitCategoryModule(AnsibleModule):
             dialog_parent_id = None
             if 'dialog_parent' in field:
                 dialog_parent_field_name = '%s_id' % field['dialog_parent']
+                if not dialog_parent_field_name in new_data.keys():
+                    dialog_parent_field_name = field['dialog_parent']
                 dialog_parent_id = new_data[dialog_parent_field_name]
                 if dialog_parent_id is None:
                     my_msg = 'You need to specify a %s or %s if you want to set %s' % (

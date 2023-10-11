@@ -383,7 +383,8 @@
         idoit: "{{ idoit_access_test }}"
         obj_id: "{{ my_obj_id }}"
         application: 17978 # Ubuntu
-        assigned_version: "18.04.2"
+        #application_priority_id: 1 # Primary
+        assigned_version: "19aaa"
         installDate: 2023-10-06
         search_by_fields:
           - application
