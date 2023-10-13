@@ -390,7 +390,22 @@
           - application
       tags:
         - software
+    - name: Get stammdaten
+      scaleuptechnologies.idoit.idoit_cat_person_master_info:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 26
+      tags:
+        - person_master
 
+    - name: Set stammdaten
+      scaleuptechnologies.idoit.idoit_cat_person_master:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 26
+        first_name: Sven
+        last_name: Anders
+        function: Head of Automatisation
+      tags:
+        - person_master
 
 
   vars:
