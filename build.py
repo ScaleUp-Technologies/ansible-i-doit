@@ -1,10 +1,10 @@
 #!/usr/bin/python
 import os
 import yaml
+import argparse
 from jinja2 import Environment, FileSystemLoader
 
-
-def render_cat(base_spec, template):
+def render_cat(base_spec, template, outdir):
     idoit_doc_options = {}
     for fieldname in base_spec['fields'].keys():
         ansible_name = fieldname
@@ -94,13 +94,13 @@ def render_cat(base_spec, template):
         'fields': base_spec['fields'],
     }
 
-    out_filename = 'plugins/modules/idoit_cat_%s.py' % base_spec['basename']
+    out_filename = '%s/modules/idoit_cat_%s.py' % (outdir,base_spec['basename'])
     write_py_file(out_filename, template, idoit_doc,
                   idoit_examples, idoit_return, idoit_spec,
                   'IdoitCategoryModule')
 
 
-def render_cat_info(base_spec, template):
+def render_cat_info(base_spec, template, outdir):
     idoit_doc_options = {}
     idoit_doc = {
         'module': ('idoit_cat_%s_info' % base_spec['basename']),
@@ -140,7 +140,7 @@ def render_cat_info(base_spec, template):
         'fields': base_spec['fields'],
     }
 
-    out_filename = 'plugins/modules/idoit_cat_%s_info.py' % base_spec['basename']
+    out_filename = '%s/modules/idoit_cat_%s_info.py' % (outdir,base_spec['basename'])
     write_py_file(out_filename, template, idoit_doc, idoit_examples,
                   idoit_return, idoit_spec, 'IdoitCategoryInfoModule')
 
@@ -157,24 +157,27 @@ def write_py_file(filename, template, idoit_doc, idoit_examples,
         outfile.write(content)
 
 
-def processYaml(filename, template):
+def processYaml(filename, template, outdir):
     print(filename)
 
     with open(filename, "r") as stream:
         try:
             base_spec = yaml.safe_load(stream)
-            render_cat(base_spec, template)
-            render_cat_info(base_spec, template)
+            render_cat(base_spec, template, outdir)
+            render_cat_info(base_spec, template, outdir)
         except yaml.YAMLError as exc:
             print(exc)
 
 
 def main():
-    directory = "src/idoit/category/"
-    environment = Environment(loader=FileSystemLoader("src/idoit/templates/"))
+    aparser = argparse.ArgumentParser(description='Build Idoit Collection')
+    aparser.add_argument('-s','--src', type=str, help="src dircectory", default='src/idoit')
+    aparser.add_argument('-d','--dest', type=str, help="dest dircectory", default='plugins')
+    args = aparser.parse_args()
+    directory = f"{args.src}/category/"
+    environment = Environment(loader=FileSystemLoader(f"{args.src}/templates/"))
     template = environment.get_template("category.py.j2")
     for file in os.listdir(directory):
-        processYaml(os.path.join(directory, file), template)
-
+        processYaml(os.path.join(directory, file), template, args.dest)
 
 main()
