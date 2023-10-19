@@ -1,0 +1,39 @@
+category: C__CATS__PERSON_MASTER
+basename: person_master
+single_value_cat: True
+fields:
+  title:
+    description: Title
+    type: str
+  first_name:
+    description: First Name
+    type: str
+  last_name:
+    description: Last Name
+    type: str
+  function:
+    description: Function
+    type: str
+  mail:
+    description: Mail
+    type: str
+  phone_mobile:
+    description: Mobile phone number
+    type: str
+  phone_company:
+    description: Phone number in the office
+    type: str
+  personnel_number:
+    description: Personal Number
+    type: str
+  description:
+    type: html
+    description: Description of the Power Consumer
+doc_examples:
+  - name: Set stammdaten
+    scaleuptechnologies.idoit.idoit_cat_person_master:
+      idoit: "{{ idoit_access }}"
+      obj_id: 26
+      first_name: Sven
+      last_name: Anders
+      function: Head of Automatisation
