@@ -9,7 +9,7 @@ from pprint import pprint
 import idoit_scaleup
 import json
 from math import isclose
-
+from datetime import datetime
 
 class IdoitCategoryModule(AnsibleModule):
     def __init__(self, *args, idoit_spec):
@@ -32,9 +32,7 @@ class IdoitCategoryModule(AnsibleModule):
             if 'ansible_name' in field.keys():
                 ansible_name = field['ansible_name']
             ansible_fields[ansible_name] = field
-            if field['type'] == 'str':
-                arg_spec[ansible_name] = dict(type='str')
-            elif field['type'] == 'html':
+            if field['type'] in  ['str','html','datetime']:
                 arg_spec[ansible_name] = dict(type='str')
             elif field['type'] == 'float':
                 arg_spec[ansible_name] = dict(type='float')
@@ -211,12 +209,17 @@ class IdoitCategoryModule(AnsibleModule):
                     self.params[ansible_name] = field['default']
                 elif (field['type'] in ['str', 'html']):
                     self.params[ansible_name] = ""
+            if (field['type']=='datetime'):
+                try:
+                    datetime_object = datetime.strptime(self.params[ansible_name], '%Y-%m-%d %H:%M:%S')
+                except ValueError:
+                    self.fail_json(msg=f"Datetime not parseable in {ansible_name} field (value={self.params[ansible_name]}")
             if ((field['type'] in ['dialog', 'str']) and
                 (self.params[ansible_name] is not None) and
                     ('\n' in self.params[ansible_name])):
                 self.fail_json(msg='Linefeed is not allowed in %s field (value="%s")' %
                                    (ansible_name, self.params[ansible_name]))
-            if field['type'] in ['html', 'str', 'float', 'int']:
+            if field['type'] in ['html', 'str', 'float', 'int', 'datetime']:
                 new_data[ansible_name] = self.params[ansible_name]
                 idoit_new_data[idoit_name] = new_data[ansible_name]
             elif field['type'] == 'dialog':
@@ -373,7 +376,7 @@ class IdoitCategoryInfoModule(AnsibleModule):
                 ansible_name = field['ansible_name']
             if not 'type' in field.keys():
                 raise Exception('Type not defined %s' % json.dumps(field))
-            if field['type'] in ['str', 'float', 'int', 'bool', 'html', 'list']:
+            if field['type'] in ['str', 'float', 'int', 'bool', 'html', 'list','datetime']:
                 ans_data[ansible_name] = idoit_data[idoit_name]
             elif field['type'] == 'dialog':
                 ansible_id_name = '%s_id' % (ansible_name)
