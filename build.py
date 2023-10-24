@@ -31,7 +31,7 @@ def render_cat(base_spec, template, outdir):
         elif field['type'] == 'list':
             idoit_doc_options[ansible_name]['type'] = 'list'
             idoit_doc_options[ansible_name]['elements'] = field['element_type']
-        elif field['type'] == 'datetime':
+        elif field['type'] in [ 'datetime', 'date_hhmm'] :
             idoit_doc_options[ansible_name]['type'] = 'str'
         elif field['type'] not in ['str', 'html']:
             raise Exception('Unsupported type %s in %s.yml' %

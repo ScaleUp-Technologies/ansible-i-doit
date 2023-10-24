@@ -33,7 +33,7 @@ class IdoitCategoryModule(AnsibleModule):
             if 'ansible_name' in field.keys():
                 ansible_name = field['ansible_name']
             ansible_fields[ansible_name] = field
-            if field['type'] in ['str', 'html', 'datetime']:
+            if field['type'] in ['str', 'html', 'datetime', 'date_hhmm']:
                 arg_spec[ansible_name] = dict(type='str')
             elif field['type'] == 'float':
                 arg_spec[ansible_name] = dict(type='float')
@@ -211,18 +211,28 @@ class IdoitCategoryModule(AnsibleModule):
                 elif (field['type'] in ['str', 'html']):
                     self.params[ansible_name] = ""
             if (field['type'] == 'datetime'):
-                try:
-                    datetime_object = datetime.strptime(
-                        self.params[ansible_name], '%Y-%m-%d %H:%M:%S')
-                except ValueError:
-                    self.fail_json(
-                        msg=f"Datetime not parseable in {ansible_name} field (value={self.params[ansible_name]}")
+                if (self.params[ansible_name] is not None) and (self.params[ansible_name] != ''):
+                    try:
+                        datetime_object = datetime.strptime(
+                            self.params[ansible_name], '%Y-%m-%d %H:%M:%S')
+                    except ValueError:
+                        self.fail_json(
+                            msg=f"Datetime not parseable in {ansible_name} field (value={self.params[ansible_name]}")
+            if (field['type'] == 'date_hhmm'):
+                if (self.params[ansible_name] is not None) and (self.params[ansible_name] != ''):
+                    try:
+                        datetime_object = datetime.strptime(
+                            self.params[ansible_name], '%Y-%m-%d %H:%M')
+                    except ValueError:
+                        self.fail_json(
+                            msg=f"Datetime not parseable in {ansible_name} field (value={self.params[ansible_name]}")
+
             if ((field['type'] in ['dialog', 'str']) and
                 (self.params[ansible_name] is not None) and
                     ('\n' in self.params[ansible_name])):
                 self.fail_json(msg='Linefeed is not allowed in %s field (value="%s")' %
                                    (ansible_name, self.params[ansible_name]))
-            if field['type'] in ['html', 'str', 'float', 'int', 'datetime']:
+            if field['type'] in ['html', 'str', 'float', 'int', 'datetime', 'date_hhmm']:
                 new_data[ansible_name] = self.params[ansible_name]
                 idoit_new_data[idoit_name] = new_data[ansible_name]
             elif field['type'] == 'dialog':
@@ -323,7 +333,10 @@ class IdoitCategoryModule(AnsibleModule):
                     result['changed'] = True
                     sanitized_before[key] = old_data[key]
                     sanitized_after[key] = new_data[key]
-            elif new_data[key] != old_data[key]:
+            elif (not((new_data[key] == '' and old_data[key] is None) or
+                      (new_data[key] is None and old_data[key] == ''))
+                 and
+                 (new_data[key] != old_data[key])):
                 result['changed'] = True
                 sanitized_before[key] = old_data[key]
                 sanitized_after[key] = new_data[key]
@@ -393,7 +406,7 @@ class IdoitCategoryInfoModule(AnsibleModule):
                 ansible_name = field['ansible_name']
             if not 'type' in field.keys():
                 raise Exception('Type not defined %s' % json.dumps(field))
-            if field['type'] in ['str', 'float', 'int', 'bool', 'html', 'list', 'datetime']:
+            if field['type'] in ['str', 'float', 'int', 'bool', 'html', 'list', 'datetime', 'date_hhmm']:
                 ans_data[ansible_name] = idoit_data[idoit_name]
             elif field['type'] == 'dialog':
                 ansible_id_name = '%s_id' % (ansible_name)
