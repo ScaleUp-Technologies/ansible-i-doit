@@ -11,6 +11,7 @@ import json
 from math import isclose
 from datetime import datetime
 
+
 class IdoitCategoryModule(AnsibleModule):
     def __init__(self, *args, idoit_spec):
 
@@ -32,7 +33,7 @@ class IdoitCategoryModule(AnsibleModule):
             if 'ansible_name' in field.keys():
                 ansible_name = field['ansible_name']
             ansible_fields[ansible_name] = field
-            if field['type'] in  ['str','html','datetime']:
+            if field['type'] in ['str', 'html', 'datetime']:
                 arg_spec[ansible_name] = dict(type='str')
             elif field['type'] == 'float':
                 arg_spec[ansible_name] = dict(type='float')
@@ -187,7 +188,7 @@ class IdoitCategoryModule(AnsibleModule):
                     self.params[ansible_name], dialog_parent_id)
                 return (True, ret)
 
-    def present(self,  old_idoit_data, merge_mode):
+    def present(self, old_idoit_data, merge_mode):
         result = dict(
             changed=False
         )
@@ -209,11 +210,13 @@ class IdoitCategoryModule(AnsibleModule):
                     self.params[ansible_name] = field['default']
                 elif (field['type'] in ['str', 'html']):
                     self.params[ansible_name] = ""
-            if (field['type']=='datetime'):
+            if (field['type'] == 'datetime'):
                 try:
-                    datetime_object = datetime.strptime(self.params[ansible_name], '%Y-%m-%d %H:%M:%S')
+                    datetime_object = datetime.strptime(
+                        self.params[ansible_name], '%Y-%m-%d %H:%M:%S')
                 except ValueError:
-                    self.fail_json(msg=f"Datetime not parseable in {ansible_name} field (value={self.params[ansible_name]}")
+                    self.fail_json(
+                        msg=f"Datetime not parseable in {ansible_name} field (value={self.params[ansible_name]}")
             if ((field['type'] in ['dialog', 'str']) and
                 (self.params[ansible_name] is not None) and
                     ('\n' in self.params[ansible_name])):
@@ -244,12 +247,22 @@ class IdoitCategoryModule(AnsibleModule):
         result['data'] = new_data
         sanitized_before = {}
         sanitized_after = {}
+
         for key in old_data.keys():
+            idoit_name = key
+            for _idoit_name in self.idoit_spec['fields'].keys():
+                item = self.idoit_spec['fields'][_idoit_name]
+                if 'ansible_name' not in item:
+                    continue
+                if item['ansible_name'] == key:
+                    idoit_name = _idoit_name
+                    break
+
             if key not in new_data.keys():
                 if merge_mode:
                     new_data[key] = old_data[key]
                     if old_data[key] is not None:
-                        idoit_new_data[key] = old_data[key]
+                        idoit_new_data[idoit_name] = old_data[key]
                 else:
                     result['changed'] = True
                     sanitized_before[key] = old_data[key]
@@ -257,21 +270,22 @@ class IdoitCategoryModule(AnsibleModule):
                 new_data[key] = old_data[key]
                 if old_data[key] is not None:
                     # Je nach Typ bearbeiten, bei dialog z.B. muss das _id wieder weg
-                    if key in self.idoit_spec['fields'].keys():
-                        type=self.idoit_spec['fields'][key]['type']
+                    if idoit_name in self.idoit_spec['fields'].keys():
+                        type = self.idoit_spec['fields'][idoit_name]['type']
                         if type in ['html', 'str', 'float', 'int', 'list']:
-                            idoit_new_data[key] = old_data[key]
+                            idoit_new_data[idoit_name] = old_data[key]
                         elif type == 'bool':
                             if old_data[key]:
-                                idoit_new_data[key] = 1
+                                idoit_new_data[idoit_name] = 1
                             else:
-                                idoit_new_data[key] = 0
+                                idoit_new_data[idoit_name] = 0
                         else:
-                            raise Exception('Unknown old data type %s in merge mode %s = %s' % (type, key, old_data[key]))
+                            raise Exception('Unknown old data type %s in merge mode %s = %s' % (
+                                type, key, old_data[key]))
                     elif ((key.endswith('_id')) and
-                         (key[:-3] in self.idoit_spec['fields'].keys()) and
-                         (self.idoit_spec['fields'][key[:-3]]['type']=='dialog')):
-                        idoit_new_data[key[:-3]]=old_data[key]
+                          (key[:-3] in self.idoit_spec['fields'].keys()) and
+                          (self.idoit_spec['fields'][key[:-3]]['type'] == 'dialog')):
+                        idoit_new_data[key[:-3]] = old_data[key]
 
         for key in new_data.keys():
             if key not in old_data.keys():
@@ -326,14 +340,17 @@ class IdoitCategoryModule(AnsibleModule):
                     r = self.idoit_cat_api.save_category(
                         self.params['obj_id'], idoit_new_data)
                     if r is None:
-                        api_log=idoit_scaleup.get_api_log()
-                        self.fail_json(msg='None RTN nach Cat Save',idn=idoit_new_data, api_log=api_log)
+                        api_log = idoit_scaleup.get_api_log()
+                        self.fail_json(msg='None RTN nach Cat Save',
+                                       idn=idoit_new_data, api_log=api_log)
                     if 'result' not in r:
-                        api_log=idoit_scaleup.get_api_log()
-                        self.fail_json(msg='No Result in r nach Cat Save',idn=idoit_new_data, rtn=r, api_log=api_log)
+                        api_log = idoit_scaleup.get_api_log()
+                        self.fail_json(
+                            msg='No Result in r nach Cat Save', idn=idoit_new_data, rtn=r, api_log=api_log)
                     if r['result'] is None:
-                        api_log=idoit_scaleup.get_api_log()
-                        self.fail_json(msg='None Result in r nach Cat Save',idn=idoit_new_data, rtn=r, api_log=api_log)
+                        api_log = idoit_scaleup.get_api_log()
+                        self.fail_json(msg='None Result in r nach Cat Save',
+                                       idn=idoit_new_data, rtn=r, api_log=api_log)
 
                     if 'entry' in r['result']:
                         result['id'] = r['result']['entry']
@@ -376,7 +393,7 @@ class IdoitCategoryInfoModule(AnsibleModule):
                 ansible_name = field['ansible_name']
             if not 'type' in field.keys():
                 raise Exception('Type not defined %s' % json.dumps(field))
-            if field['type'] in ['str', 'float', 'int', 'bool', 'html', 'list','datetime']:
+            if field['type'] in ['str', 'float', 'int', 'bool', 'html', 'list', 'datetime']:
                 ans_data[ansible_name] = idoit_data[idoit_name]
             elif field['type'] == 'dialog':
                 ansible_id_name = '%s_id' % (ansible_name)
