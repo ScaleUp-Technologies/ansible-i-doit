@@ -390,6 +390,7 @@
           - application
       tags:
         - software
+
     - name: Get stammdaten
       scaleuptechnologies.idoit.idoit_cat_person_master_info:
         idoit: "{{ idoit_access_test }}"
@@ -407,6 +408,29 @@
       tags:
         - person_master
 
+    - name: Get Custom Identifier
+      scaleuptechnologies.idoit.idoit_cat_identifier_info:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 16922
+      tags:
+        - identifier
+
+    - name: Set Custom Identifier
+      scaleuptechnologies.idoit.idoit_cat_identifier:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 16922
+        key: bad_crm_id
+        type: "BadCRM 2.0"
+        value: 19
+        last_edited: "2023-10-24 08:18"
+        group: ""
+        #last_scan: "2023-10-24 08:18:10"
+        #last_scan: "{{ None }}"
+        last_updated: "2023-10-24 08:18"
+        search_by_fields:
+          - key
+      tags:
+        - identifier
 
   vars:
     idoit_access_test:
