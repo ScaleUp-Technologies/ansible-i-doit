@@ -432,6 +432,39 @@
       tags:
         - identifier
 
+    - name: Get Layer3 Net Ipv4
+      scaleuptechnologies.idoit.idoit_cat_layer3_net_info:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 10428
+      tags:
+        - layer3_net
+    - name: Get Layer3 Net Ipv6
+      scaleuptechnologies.idoit.idoit_cat_layer3_net_info:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: 10788
+      tags:
+        - layer3_net
+    - name: Set Layer3 Net Ipv4 (type=1)
+      scaleuptechnologies.idoit.idoit_cat_layer3_net:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: "21094"
+        address: "127.9.0.0"
+        cidr_suffix: 25
+        type_id: 1 # Ipv4
+      tags:
+        - layer3_net
+        - layer3_net_set_ipv4
+
+    - name: Set Layer3 Net Ipv6 (type=1000)
+      scaleuptechnologies.idoit.idoit_cat_layer3_net:
+        idoit: "{{ idoit_access_test }}"
+        obj_id: "21096"
+        address: "2001:db8:affe::"
+        cidr_suffix: 64
+        type_id: 1000 # IPv6
+      tags:
+        - layer3_net
+        - layer3_net_set_ipv6
   vars:
     idoit_access_test:
       api_key: "{{ lookup('ansible.builtin.env', 'IDOIT_KEY') }}"

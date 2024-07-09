@@ -1,0 +1,32 @@
+category: C__CATS__NET
+basename: layer3_net
+single_value_cat: True
+fields:
+  address:
+    type: str
+    description: Address
+  type:
+    type: dialog
+    description: Type
+    description_id: Id of Type
+  cidr_suffix:
+    type: int
+    description: Netmask Suffix
+  description:
+    type: html
+    description: Description of the Layer2 Net
+doc_examples:
+  - name: Create a new IPv4 (type=1) Network
+    scaleuptechnologies.idoit.idoit_cat_layer3_net:
+      idoit: "{{ idoit_access }}"
+      obj_id: 1320
+      address: "10.0.10.0"
+      cidr_suffix: 24
+      type: 1
+  - name: Create a new IPv6 (type=1000) Network
+    scaleuptechnologies.idoit.idoit_cat_layer3_net:
+      idoit: "{{ idoit_access }}"
+      obj_id: 1320
+      address: "2001:db8::"
+      cidr_suffix: 32
+      type: 1
