@@ -21,8 +21,8 @@ fi
 set -e
 
 sed -i -e "s/version: .*/version: $VERSION/" galaxy.yml
-git commit -m "New Version $VERSION" galaxy.yml
-git tag v${VERSION}
+echo git commit -m "New Version $VERSION" galaxy.yml
+echo git tag v${VERSION}
 echo git push origin v${VERSION}
 
 MYTMP=$(mktemp -d)
